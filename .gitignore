@@ -1,0 +1,9 @@
+# ignore
+.DS_Store
+*.pyc
+.pydev*
+.project
+
+env
+docs/
+pypo/logs
