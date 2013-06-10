@@ -26,6 +26,10 @@ cd /home/pypo/pypo
 sudo -u pypo env/bin/python pypo.py
 
 
+# add to supervisor
+ln -s /home/pypo/src/pypo/conf/* /etc/supervisor/conf.d/
+
+
 
 
 # install liquidsoap from source
