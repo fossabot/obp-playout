@@ -15,6 +15,10 @@ source env/bin/activate
 pip install -r requirements.txt
 
 
+
+mkdir -p /var/log/pypo/ls/
+chown -R pypo:pypo /var/log/pypo
+
 # run the scripts
 
 
@@ -22,7 +26,7 @@ pip install -r requirements.txt
 cd /home/pypo/src/pypo/pypo/liquidsoap_scripts
 sudo -u pypo /usr/local/bin/liquidsoap --verbose -f ls_script.liq
 
-cd /home/pypo/pypo
+cd /home/pypo/src/pypo/pypo
 sudo -u pypo env/bin/python pypo.py
 
 
