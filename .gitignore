@@ -7,3 +7,6 @@
 env
 docs/
 pypo/logs
+
+
+api_client.cfg
