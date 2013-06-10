@@ -121,7 +121,7 @@ try:
     #copy files to bin dir
     copy_dir("%s/.."%current_script_dir, config["bin_dir"]+"/bin/")
 
-    # delete /usr/lib/airtime/pypo/bin/liquidsoap_scripts/liquidsoap.cfg
+    # delete ./liquidsoap.cfg
     # as we don't use it anymore.(CC-2552)
     os.remove(config["bin_dir"]+"/bin/liquidsoap_scripts/liquidsoap.cfg")
 

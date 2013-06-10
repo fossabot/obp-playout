@@ -181,7 +181,7 @@ def make_scheduled_play_unavailable()
 end
 
 def update_source_status(sourcename, status) =
-    command = "/usr/lib/airtime/pypo/bin/liquidsoap_scripts/notify.sh --source-name=#{sourcename} --source-status=#{status} &"
+    command = "./notify.sh --source-name=#{sourcename} --source-status=#{status} &"
     system(command)
     log(command)
 end
@@ -206,7 +206,7 @@ end
 def check_master_dj_client(user,password) =
     log("master connected")
     #get the output of the php script
-    ret = get_process_lines("python /usr/lib/airtime/pypo/bin/liquidsoap_scripts/liquidsoap_auth.py --master #{user} #{password}")
+    ret = get_process_lines("python ./liquidsoap_auth.py --master #{user} #{password}")
     #ret has now the value of the live client (dj1,dj2, or djx), or "ERROR"/"unknown" ...
     ret = list.hd(ret)
 
@@ -217,7 +217,7 @@ end
 def check_dj_client(user,password) =
     log("live dj connected")
     #get the output of the php script
-    ret = get_process_lines("python /usr/lib/airtime/pypo/bin/liquidsoap_scripts/liquidsoap_auth.py --dj #{user} #{password}")
+    ret = get_process_lines("python ./liquidsoap_auth.py --dj #{user} #{password}")
     #ret has now the value of the live client (dj1,dj2, or djx), or "ERROR"/"unknown" ...
     hd = list.hd(ret)
     log("Live DJ authenticated: #{hd}")
@@ -392,6 +392,6 @@ if s3_enable == true then
                 s3_connected, s3_description, s3_channels)
 end
 
-command = "/usr/lib/airtime/pypo/bin/liquidsoap_scripts/notify.sh --liquidsoap-started &"
+command = "./notify.sh --liquidsoap-started &"
 log(command)
 system(command)

@@ -33,7 +33,7 @@ if [ $debug = "t" ]; then
 else
     ls_path="/usr/bin/airtime-liquidsoap --verbose -f -d"
 fi
-ls_param="/usr/lib/airtime/pypo/bin/liquidsoap_scripts/ls_script.liq"
+ls_param="./ls_script.liq"
 
 export PYTHONPATH=${api_client_path}
 

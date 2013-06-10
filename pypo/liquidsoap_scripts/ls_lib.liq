@@ -1,6 +1,6 @@
 def notify(m)
   #current_media_id := string_of(m['schedule_table_id'])
-  command = "/usr/lib/airtime/pypo/bin/liquidsoap_scripts/notify.sh --media-id=#{m['schedule_table_id']} &"
+  command = "./notify.sh --media-id=#{m['schedule_table_id']} &"
   log(command)
   system(command)
 end
@@ -10,7 +10,7 @@ def notify_stream(m)
   #if a string has a single apostrophe in it, let's comment it out by ending the string before right before it
   #escaping the apostrophe, and then starting a new string right after it. This is why we use 3 apostrophes.
   json_str = string.replace(pattern="'",(fun (s) -> "'\''"), json_str)
-  command = "/usr/lib/airtime/pypo/bin/liquidsoap_scripts/notify.sh --webstream='#{json_str}' --media-id=#{!current_dyn_id} &"
+  command = "./notify.sh --webstream='#{json_str}' --media-id=#{!current_dyn_id} &"
   log(command)
   system(command)
 end
@@ -78,14 +78,14 @@ def output_to(output_type, type, bitrate, host, port, pass, mount_point, url, de
     source = ref s
     def on_error(msg)
         connected := "false"
-        command = "/usr/lib/airtime/pypo/bin/liquidsoap_scripts/notify.sh --error='#{msg}' --stream-id=#{stream} --time=#{!time} &"
+        command = "./notify.sh --error='#{msg}' --stream-id=#{stream} --time=#{!time} &"
         system(command)
         log(command)
         5.
     end
     def on_connect()
         connected := "true"
-        command = "/usr/lib/airtime/pypo/bin/liquidsoap_scripts/notify.sh --connect --stream-id=#{stream} --time=#{!time} &"
+        command = "./notify.sh --connect --stream-id=#{stream} --time=#{!time} &"
         system(command)
         log(command)
     end
