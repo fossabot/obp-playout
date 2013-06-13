@@ -74,3 +74,22 @@ sed -i "s/#ocaml-faad/ocaml-faad/g" PACKAGES
 make
 
 
+
+
+
+
+# run in dev-mode
+
+## liquidsoap
+supervisorctl stop liquidsoap.pypo
+cd /home/pypo/src/pypo/pypo/liquidsoap_scripts
+sudo -u pypo /usr/local/bin/liquidsoap --verbose -f ls_script.liq
+
+# pypo
+supervisorctl stop pypo
+cd /home/pypo/src/pypo/pypo
+sudo -u pypo env/bin/python pypo.py
+
+
+
+

@@ -26,8 +26,10 @@ from configobj import ConfigObj
 
 # custom imports
 #from util import *
-from api_clients import *
-from std_err_override import LogWriter
+sys.path.append("..")
+
+from pypo.api_clients import *
+from pypo.std_err_override import LogWriter
 
 # help screeen / info
 usage = "%prog [options]" + " - notification gateway"

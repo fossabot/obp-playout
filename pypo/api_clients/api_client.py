@@ -73,9 +73,16 @@ api_config['export_url'] = 'abcast/base/get-schedule/?format=json&apikey=%%api_k
 
 api_config['get_media_url'] = 'get-media/file/%%file%%/api_key/%%api_key%%'
 api_config['update_item_url'] = 'notify-schedule-group-play/api_key/%%api_key%%/schedule_id/%%schedule_id%%'
-api_config['update_start_playing_url'] = 'notify-media-item-start-play/api_key/%%api_key%%/media_id/%%media_id%%/'
-api_config['get_stream_setting'] = 'get-stream-setting/format/json/api_key/%%api_key%%/'
-api_config['update_liquidsoap_status'] = 'update-liquidsoap-status/format/json/api_key/%%api_key%%/msg/%%msg%%/stream_id/%%stream_id%%/boot_time/%%boot_time%%'
+
+#api_config['update_start_playing_url'] = 'notify-media-item-start-play/api_key/%%api_key%%/media_id/%%media_id%%/'
+api_config['update_start_playing_url'] = 'abcast/base/notify-media-item-start-play/?format=json&api_key=%%api_key%%&media_id=%%media_id%%'
+
+#api_config['get_stream_setting'] = 'get-stream-setting/format/json/api_key/%%api_key%%/'
+api_config['get_stream_setting'] = 'abcast/base/get-stream-settings/?format=json&apikey=%%api_key%%'
+
+# api_config['update_liquidsoap_status'] = 'update-liquidsoap-status/format/json/api_key/%%api_key%%/msg/%%msg%%/stream_id/%%stream_id%%/boot_time/%%boot_time%%'
+api_config['update_liquidsoap_status'] = 'abcast/base/update-liquidsoap-status/?format=json&api_key=%%api_key%%&msg=%%msg%%&stream_id=%%stream_id%%&boot_time=%%boot_time%%'
+
 api_config['update_source_status'] = 'update-source-status/format/json/api_key/%%api_key%%/sourcename/%%sourcename%%/status/%%status%%'
 api_config['check_live_stream_auth'] = 'check-live-stream-auth/format/json/api_key/%%api_key%%/username/%%username%%/password/%%password%%/djtype/%%djtype%%'
 
@@ -98,7 +105,12 @@ api_config['update_stream_setting_table'] = 'abcast/base/update-stream-settings/
 api_config['get_files_without_silan_value'] = 'get-files-without-silan-value/api_key/%%api_key%%'
 api_config['update_cue_values_by_silan'] = 'update-cue-values-by-silan/api_key/%%api_key%%'
 
+_api_config = {}
+for key, url in api_config.iteritems():
+    url = url + '&username=%s&channel_id=%s&' % ('peter', '2962371c-a904-11e2-92e7-b8f6b11a3aed')
+    _api_config[key] = url
 
+api_config = _api_config
 
 ################################################################################
 # Airtime API Client
@@ -328,6 +340,13 @@ class AirtimeApiClient(object):
              self.config["base_dir"], self.config["api_base"],
              self.config[config_action_key])
         url = url.replace("%%api_key%%", self.config["api_key"])
+        url = url.replace("%%username%%", self.config["username"])
+        url = url.replace("%%channel_id%%", self.config["channel_id"])
+
+        print "### URL ###"
+        print url
+        print '###########'
+
         return url
 
     """

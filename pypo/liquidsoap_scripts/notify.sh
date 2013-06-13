@@ -11,4 +11,8 @@ SCRIPT=`readlink -f $0`
 SCRIPTPATH=`dirname $SCRIPT`
 
 cd ${SCRIPTPATH}
-timeout 45 python pyponotify.py "$@"
+cd "../"
+ls -l -a
+echo "######################################################"
+timeout 45 env/bin/python liquidsoap_scripts/pyponotify.py "$@"
+echo "######################################################"
