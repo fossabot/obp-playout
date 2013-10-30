@@ -108,6 +108,11 @@ class Notify:
         logger.debug("Response: " + json.dumps(response))
 
     def run_with_options(self, options):
+
+        print "* run_with_options pre options"
+        print options
+        print "* post options"
+
         if options.error and options.stream_id:
             self.notify_liquidsoap_status(options.error, options.stream_id, options.time)
         elif options.connect and options.stream_id:
@@ -128,7 +133,6 @@ class Notify:
 if __name__ == '__main__':
     print
     print '#########################################'
-    print '#           *** pypo  ***               #'
     print '#     pypo notification gateway         #'
     print '#########################################'
 

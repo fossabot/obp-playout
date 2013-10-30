@@ -62,23 +62,22 @@ class PypoPush(Thread):
             try:
                 print 'try to get media_schedule'
                 media_schedule = self.queue.get(block=True)
-                print media_schedule
             except Exception, e:
                 self.logger.error(str(e))
                 raise
             else:
                 self.logger.debug(media_schedule)
-                print 'else??????????????'
                 #separate media_schedule list into currently_playing and
                 #scheduled_for_future lists
                 currently_playing, scheduled_for_future = \
                         self.separate_present_future(media_schedule)
 
+                """
                 print 'currently:'
                 print currently_playing
                 print 'future:'
                 print scheduled_for_future
-
+                """
                 self.pypo_liquidsoap.verify_correct_present_media(
                         currently_playing)
                 self.future_scheduled_queue.put(scheduled_for_future)
@@ -87,8 +86,8 @@ class PypoPush(Thread):
         #tnow = datetime.now()
         tnow = datetime.now()
 
-        print 'tnow:'
-        print tnow
+        #print 'tnow:'
+        #print tnow
 
         present = []
         future = {}
@@ -99,7 +98,7 @@ class PypoPush(Thread):
 
             diff_td = tnow - media_item['start']
             diff_sec = pure.date_interval_to_seconds(diff_td)
-            print 'diff_sec: %s' % diff_sec
+            # print 'diff_sec: %s' % diff_sec
             if diff_sec >= 0:
                 present.append(media_item)
             else:

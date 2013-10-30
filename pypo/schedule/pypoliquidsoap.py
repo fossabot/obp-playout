@@ -77,6 +77,13 @@ class PypoLiquidsoap():
         if media_item['file_ready']:
             available_queue = self.find_available_queue()
 
+            print
+            print '---------------------------------'
+            print 'available queue:'
+            print available_queue
+            print '---------------------------------'
+            print
+
             try:
                 self.telnet_liquidsoap.queue_push(available_queue, media_item)
                 self.liq_queue_tracker[available_queue] = media_item

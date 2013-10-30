@@ -17,7 +17,7 @@ def create_liquidsoap_annotation(media):
             'liq_fade_out="%s",liq_cue_in="%s",liq_cue_out="%s",' +
             'schedule_table_id="%s",replay_gain="%s dB":%s') % \
             (media['id'], 
-                    float(media['fade_cross']) / 1000, 
+                    float(media['fade_cross']),
                     float(media['fade_in']) / 1000, 
                     float(media['fade_out']) / 1000, 
                     float(media['cue_in']), 
@@ -42,10 +42,10 @@ class TelnetLiquidsoap:
     def __is_empty(self, queue_id):
         tn = self.__connect()
         msg = '%s.queue\nexit\n' % queue_id
-        print 'IS EMPTY?'
-        print msg
+        print 'is queue %s empty?' % queue_id
         tn.write(msg)
         output = tn.read_all().splitlines()
+        print 'output: %s' % output
         if len(output) == 3:
             return len(output[0]) == 0
         else:
@@ -80,7 +80,7 @@ class TelnetLiquidsoap:
             if not self.__is_empty(queue_id):
                 print 'HM QUEUE NOT EMPTY. IS THIS A PROBLEM???'
                 pass
-                # raise QueueNotEmptyException()
+                #raise QueueNotEmptyException()
 
             tn = self.__connect()
 

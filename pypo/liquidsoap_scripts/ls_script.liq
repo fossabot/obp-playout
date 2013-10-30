@@ -355,6 +355,13 @@ if output_sound_device then
 
 end
 
+
+
+output.icecast(%ogg(%flac(samplerate=44100, channels=2,compression=0, bits_per_sample=16)),id="icecast_xxxxx",
+               fallible=true,mount="my_radio.ogg", 
+               host="node06.daj.anorg.net", port=8000, password="dasource",
+               s)
+
 if s1_enable == true then
     if s1_output == 'shoutcast' then
         s1_namespace := "shoutcast_stream_1"

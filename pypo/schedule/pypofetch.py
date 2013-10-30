@@ -49,7 +49,7 @@ def keyboardInterruptHandler(signum, frame):
     sys.exit(0)
 signal.signal(signal.SIGINT, keyboardInterruptHandler)
 
-POLL_INTERVAL = 30
+POLL_INTERVAL = 60 * 60
 
 class PypoFetch(Thread):
     def __init__(self, pypoFetch_q, pypoPush_q, media_q, pypo_liquidsoap, 

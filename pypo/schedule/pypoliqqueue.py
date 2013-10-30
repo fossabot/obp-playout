@@ -61,7 +61,7 @@ class PypoLiqQueue(Thread):
                     time_until_next_play = \
                             pure.date_interval_to_seconds(
                                 #schedule_deque[0]['start'] - datetime.now())
-                                schedule_deque[0]['start'] - timedelta(milliseconds=int(schedule_deque[0]['fade_cross'])) - datetime.now())
+                                schedule_deque[0]['start'] - timedelta(milliseconds=int(schedule_deque[0]['fade_cross'] * 1000)) - datetime.now())
                     if time_until_next_play < 0:
                         time_until_next_play = 0
                 else:

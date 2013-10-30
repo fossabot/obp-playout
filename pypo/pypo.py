@@ -99,8 +99,8 @@ if __name__ == '__main__':
     logger.info('###########################################')
     
     # Map configuration values
-    ANALYSE_REPLAYGAIN = config.get('analyse_replaygain', True)
-    ANALYSE_SILENCE = config.get('analyse_silence', True)
+    ANALYSE_REPLAYGAIN = config.get('analyse_replaygain', False)
+    ANALYSE_SILENCE = config.get('analyse_silence', False)
 
 
     #Although all of our calculations are in UTC, it is useful to know what 

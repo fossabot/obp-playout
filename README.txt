@@ -19,22 +19,22 @@ pip install -r requirements.txt
 mkdir -p /var/log/pypo/ls/
 chown -R pypo:pypo /var/log/pypo
 
+
 # run the scripts
-
-
-
+su pypo
 cd /home/pypo/src/pypo/pypo/liquidsoap_scripts
-sudo -u pypo /usr/local/bin/liquidsoap --verbose -f ls_script.liq
+/usr/local/bin/liquidsoap --verbose -f ls_script.liq
 
+su pypo
 cd /home/pypo/src/pypo/pypo
-sudo -u pypo env/bin/python pypo.py
+env/bin/python pypo.py
 
 
 # add to supervisor
 ln -s /home/pypo/src/pypo/conf/* /etc/supervisor/conf.d/
 
 
-
+s0.push annotate:media_id="bc975011-4155-11e3-9643-b8f6b11a3aed",liq_start_next="6.0",liq_fade_in="2.0",liq_fade_out="2.0",liq_cue_in="0.0",liq_cue_out="10.0",schedule_table_id="bc975011-4155-11e3-9643-b8f6b11a3aed",replay_gain="0 dB":/home/pypo/test.mp3
 
 # install liquidsoap from source
 

@@ -116,12 +116,6 @@ class PypoFile(Thread):
     def copy_remote_file(self, media_item):
         src = media_item['uri']
         dst = media_item['dst']
-        
-        print 'MEDIA ITEM:'
-        print media_item
-        
-
-
         dst_exists = True
         try:
             dst_size = os.path.getsize(dst)

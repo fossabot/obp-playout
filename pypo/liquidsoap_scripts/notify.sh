@@ -12,7 +12,4 @@ SCRIPTPATH=`dirname $SCRIPT`
 
 cd ${SCRIPTPATH}
 cd "../"
-ls -l -a
-echo "######################################################"
 timeout 45 env/bin/python liquidsoap_scripts/pyponotify.py "$@"
-echo "######################################################"
