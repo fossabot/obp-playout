@@ -34,7 +34,17 @@ env/bin/python pypo.py
 ln -s /home/pypo/src/pypo/conf/* /etc/supervisor/conf.d/
 
 
+streams.scheduled_play_start
 s0.push annotate:media_id="bc975011-4155-11e3-9643-b8f6b11a3aed",liq_start_next="6.0",liq_fade_in="2.0",liq_fade_out="2.0",liq_cue_in="0.0",liq_cue_out="10.0",schedule_table_id="bc975011-4155-11e3-9643-b8f6b11a3aed",replay_gain="0 dB":/home/pypo/test.mp3
+s0.push annotate:media_id="8a3f6ab5-4612-11e3-88d2-b8f6b11a3aed",liq_start_next="10.0",liq_fade_in="10.0",liq_fade_out="10.0",liq_cue_in="0.0",liq_cue_out="40.0",schedule_table_id="8a3f6ab5-4612-11e3-88d2-b8f6b11a3aed",replay_gain="0 dB":/home/pypo/track_01.mp3
+
+streams.scheduled_play_start
+s0.push annotate:media_id="t0",liq_start_next="10.0",liq_fade_in="15.0",liq_fade_out="15.0",liq_cue_in="0.0",liq_cue_out="30.0",schedule_table_id="s0",replay_gain="0 dB":/home/pypo/track_01.mp3
+s1.push annotate:media_id="t0",liq_start_next="10.0",liq_fade_in="15.0",liq_fade_out="15.0",liq_cue_in="0.0",liq_cue_out="30.0",schedule_table_id="s0",replay_gain="0 dB":/home/pypo/test.mp3
+
+
+
+
 
 # install liquidsoap from source
 
@@ -74,7 +84,12 @@ sed -i "s/#ocaml-faad/ocaml-faad/g" PACKAGES
 make
 
 
+# to use audio processing
 
+include "ocaml-ladspa" in PACKAGES
+also install ladspa-sdk libladspa-ocaml
+and the plugins:
+caps mcp-plugins cmt blop tap-plugins ladspa-sdk csladspa tap-plugins swh-plugins
 
 
 

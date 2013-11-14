@@ -91,8 +91,9 @@ class PypoFetch(Thread):
     """
     def handle_message(self, message):
         try:
-            self.logger.info("Received event from Pypo Message Handler: %s", 
-                    message)
+            #self.logger.info("Received event from Pypo Message Handler: %s",
+            #        message)
+            self.logger.info("Received event from Pypo Message Handler")
 
             m = json.loads(message)
             command = m['event_type']
@@ -353,7 +354,7 @@ class PypoFetch(Thread):
     """
     def process_schedule(self, schedule_data):
         self.last_update_schedule_timestamp = time.time()
-        self.logger.debug(schedule_data)
+        #self.logger.debug(schedule_data)
         media = schedule_data["media"]
         media_filtered = {}
 
@@ -403,13 +404,23 @@ class PypoFetch(Thread):
         start = datetime.strptime(media_item['start'], "%Y-%m-%d-%H-%M-%S")
         end = datetime.strptime(media_item['end'], "%Y-%m-%d-%H-%M-%S")
 
+
+
         length1 = pure.date_interval_to_seconds(end - start)
         length2 = media_item['cue_out'] - media_item['cue_in']
 
+        print
+        print '### sanity check #########################'
+        print media_item
+        print '------------------------------------------'
+        print 'length1 (end - start)       : %s' % length1
+        print 'length2 (coue_out - cue_in) : %s' % length2
+
         if abs(length2 - length1) > 1:
+            self.logger.error("Two lengths are not equal!!!")
             self.logger.error("end - start length: %s", length1)
             self.logger.error("cue_out - cue_in length: %s", length2)
-            self.logger.error("Two lengths are not equal!!!")
+            self.logger.error("------------------------------------------")
 
     def is_file_opened(self, path):
         #Capture stderr to avoid polluting py-interpreter.log
@@ -483,8 +494,9 @@ class PypoFetch(Thread):
         success = self.persistent_manual_schedule_fetch(max_attempts=5)
 
         if success:
-            self.logger.info("Bootstrap schedule received: %s", 
-                    self.schedule_data)
+            #self.logger.info("Bootstrap schedule received: %s",
+            #        self.schedule_data)
+            self.logger.info("Bootstrap schedule received")
 
         loops = 1
         while True:

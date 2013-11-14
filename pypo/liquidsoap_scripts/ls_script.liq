@@ -68,6 +68,8 @@ queue = amplify(1., override="replay_gain", queue)
 
 # the crossfade function controls fade in/out
 queue = crossfade_airtime(queue)
+#queue = smart_crossfade(queue)
+#queue = crossfade(queue)
 queue = on_metadata(notify, queue)
 output.dummy(fallible=true, queue)
 
@@ -309,6 +311,12 @@ server.register(namespace="streams",
     "scheduled_play_start",
     fun (s) -> begin log("streams.scheduled_play_start") make_scheduled_play_available() "Done." end)
 
+
+
+#%include "output.liq"
+#%include "process.liq"
+
+
 if output_sound_device then
     success = ref false
 
@@ -357,10 +365,6 @@ end
 
 
 
-output.icecast(%ogg(%flac(samplerate=44100, channels=2,compression=0, bits_per_sample=16)),id="icecast_xxxxx",
-               fallible=true,mount="my_radio.ogg", 
-               host="node06.daj.anorg.net", port=8000, password="dasource",
-               s)
 
 if s1_enable == true then
     if s1_output == 'shoutcast' then

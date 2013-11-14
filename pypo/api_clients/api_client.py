@@ -538,7 +538,7 @@ class AirtimeApiClient(object):
 
     def get_stream_parameters(self):
         response = self.services.get_stream_parameters()
-        self.logger.debug(response)
+        # self.logger.debug(response)
         return response
 
     def push_stream_stats(self, data):

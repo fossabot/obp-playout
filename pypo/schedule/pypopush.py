@@ -66,7 +66,7 @@ class PypoPush(Thread):
                 self.logger.error(str(e))
                 raise
             else:
-                self.logger.debug(media_schedule)
+                #self.logger.debug(media_schedule)
                 #separate media_schedule list into currently_playing and
                 #scheduled_for_future lists
                 currently_playing, scheduled_for_future = \

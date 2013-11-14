@@ -60,20 +60,24 @@ class PypoLiqQueue(Thread):
                 if len(schedule_deque):
                     time_until_next_play = \
                             pure.date_interval_to_seconds(
-                                #schedule_deque[0]['start'] - datetime.now())
-                                schedule_deque[0]['start'] - timedelta(milliseconds=int(schedule_deque[0]['fade_cross'] * 1000)) - datetime.now())
+                                schedule_deque[0]['start'] - datetime.now())
+                                #schedule_deque[0]['start'] - timedelta(milliseconds=int(schedule_deque[0]['fade_cross'] * 1000)) - datetime.now())
                     if time_until_next_play < 0:
                         time_until_next_play = 0
                 else:
                     time_until_next_play = None
             else:
-                self.logger.info("New schedule received: %s", media_schedule)
+                # self.logger.info("New schedule received: %s", media_schedule)
+                self.logger.info("New schedule received")
 
                 #new schedule received. Replace old one with this.
                 schedule_deque.clear()
 
                 keys = sorted(media_schedule.keys())
+                print 'KEYS:'
+                print keys
                 for i in keys:
+                    print 'keys loop - i: %s' % i
                     schedule_deque.append(media_schedule[i])
 
                 if len(keys):
