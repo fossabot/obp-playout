@@ -3,6 +3,7 @@
 *.pyc
 .pydev*
 .project
+.idea
 
 env
 docs/
