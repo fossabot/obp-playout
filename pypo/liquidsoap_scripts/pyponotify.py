@@ -54,7 +54,8 @@ parser.add_option("-n", "--liquidsoap-started", help="notify liquidsoap started"
 # configure logging
 logging.config.fileConfig("configs/notify_logging.cfg")
 logger = logging.getLogger('notify')
-LogWriter.override_std_err(logger)
+#LogWriter.override_std_err(logger)
+
 
 #need to wait for Python 2.7 for this..
 #logging.captureWarnings(True)
@@ -62,6 +63,8 @@ LogWriter.override_std_err(logger)
 # loading config file
 try:
     config = ConfigObj('/etc/airtime/pypo.cfg')
+
+    print config
 
 except Exception, e:
     logger.error('Error loading config file: %s', e)
