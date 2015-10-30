@@ -3,12 +3,11 @@
 *.pyc
 .pydev*
 .project
-.idea
+.idea*
 
 env
 docs/
 pypo/logs
-
 
 api_client.cfg
 pypo.cfg
