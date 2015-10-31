@@ -12,4 +12,4 @@ SCRIPTPATH=`dirname $SCRIPT`
 
 cd ${SCRIPTPATH}
 cd "../"
-timeout 45 env/bin/python liquidsoap_scripts/pyponotify.py "$@"
+timeout 45 /home/playout/env/pypo/bin/python liquidsoap_scripts/pyponotify.py "$@"
