@@ -1,4 +1,4 @@
-%include "/etc/airtime/liquidsoap.cfg"
+%include "/home/playout/conf/liquidsoap.cfg"
 
 set("log.file.path", log_file)
 set("server.telnet", true)

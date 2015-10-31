@@ -10,7 +10,7 @@ def generate_liquidsoap_config(ss):
     print '**** DATA:'
     print data
 
-    fh = open('/etc/airtime/liquidsoap.cfg', 'w')
+    fh = open('/home/playout/conf/liquidsoap.cfg', 'w')
     fh.write("################################################\n")
     fh.write("# THIS FILE IS AUTO GENERATED. DO NOT CHANGE!! #\n")
     fh.write("################################################\n")
