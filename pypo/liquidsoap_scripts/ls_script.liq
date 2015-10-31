@@ -314,7 +314,7 @@ server.register(namespace="streams",
 
 
 #%include "output.liq"
-%include "process.liq"
+#%include "process.liq"
 
 
 if output_sound_device then
