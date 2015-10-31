@@ -27,7 +27,7 @@ def generate_liquidsoap_config(ss):
         str_buffer = "%s = %s\n" % (key, val)
         fh.write(str_buffer.encode('utf-8'))
 
-    fh.write('log_file = "/var/log/pypo/ls/<script>.log"\n')
+    fh.write('log_file = "/var/log/playout/ls/<script>.log"\n')
     fh.close()
 
 logging.basicConfig(format='%(message)s')
