@@ -4,6 +4,7 @@
 .pydev*
 .project
 .idea*
+.idea
 
 env
 docs/
