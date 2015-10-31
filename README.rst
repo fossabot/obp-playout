@@ -16,7 +16,7 @@ pip install -r requirements.txt
 
 
 
-mkdir -p /var/log/pypo/ls/
+mkdir -p /var/log/playout/ls/
 chown -R pypo:pypo /var/log/pypo
 
 

@@ -105,6 +105,18 @@ def deploy():
         except Exception, e:
             print red('unable to move directory: %s' % e)
 
+
+
+    try:
+        print green('linking supervisord config')
+        if not files.exists('%s/playout.supervised.conf' % (env.supervisor)):
+            run('ln -s %s/src/conf/playout.supervised.conf %s/playout.supervised.conf' % (env.path, env.supervisor))
+
+    except Exception, e:
+        print e
+        pass
+
+
     with cd(env.path):
         print green('remove old source')
         try:
