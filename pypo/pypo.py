@@ -27,7 +27,7 @@ from media.update.silananalyzer import SilanAnalyzer
 from api_clients import api_client
 from std_err_override import LogWriter
 
-CONFIG_PATH = '/etc/playout/pypo.cfg'
+CONFIG_PATH = '/etc/playout/'
 
 def configure_locale():
     """
@@ -73,9 +73,15 @@ def configure_locale():
         sys.exit(1)
 
 if __name__ == '__main__':
+
     # configure logging
+
+    # loading config file
+    if not os.path.isfile(os.path.join(CONFIG_PATH, 'pypo_logging.cfg')):
+        raise IOError('unable to read config file at %s' % os.path.join(CONFIG_PATH, 'pypo_logging.cfg'))
+
     try:
-        logging.config.fileConfig("configs/logging.cfg")
+        logging.config.fileConfig(os.path.join(CONFIG_PATH, 'pypo_logging.cfg'))
         logger = logging.getLogger()
         LogWriter.override_std_err(logger)
     except Exception, e:
@@ -85,12 +91,11 @@ if __name__ == '__main__':
     configure_locale()
 
     # loading config file
-
-    if not os.path.isfile(CONFIG_PATH):
-        raise IOError('unable to read config file at %s' % CONFIG_PATH)
+    if not os.path.isfile(os.path.join(CONFIG_PATH, 'pypo.cfg')):
+        raise IOError('unable to read config file at %s' % os.path.join(CONFIG_PATH, 'pypo.cfg'))
 
     try:
-        config = ConfigObj(CONFIG_PATH)
+        config = ConfigObj(os.path.join(CONFIG_PATH, 'pypo.cfg'))
         print config
     except Exception, e:
         print '******************************************'
