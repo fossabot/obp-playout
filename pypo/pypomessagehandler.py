@@ -49,6 +49,13 @@ class PypoMessageHandler(Thread):
             channel = connection.channel()
             self.simple_queue = SimpleQueue(channel, schedule_queue)
 
+            print '////////////////////////////////'
+            print self.config["rabbitmq_host"]
+            print self.config["rabbitmq_vhost"]
+            print self.config["rabbitmq_user"]
+            print self.config["rabbitmq_vhost"]
+            print '////////////////////////////////'
+
             """
             connection = Connection('amqp://guest:guest@172.16.82.1:5672//pypox')
             self.simple_queue = connection.SimpleQueue('pypo-fetch')
