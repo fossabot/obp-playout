@@ -49,12 +49,11 @@ class PypoMessageHandler(Thread):
             channel = connection.channel()
             self.simple_queue = SimpleQueue(channel, schedule_queue)
 
-            print '////////////////////////////////'
-            print self.config["rabbitmq_host"]
-            print self.config["rabbitmq_vhost"]
-            print self.config["rabbitmq_user"]
-            print self.config["rabbitmq_vhost"]
-            print '////////////////////////////////'
+
+            self.logger.info("rabbitmq_host: " + self.config["rabbitmq_host"])
+            self.logger.info("rabbitmq_user: " + self.config["rabbitmq_user"])
+            self.logger.info("rabbitmq_password: " + self.config["rabbitmq_password"])
+            self.logger.info("rabbitmq_vhost: " + self.config["rabbitmq_vhost"])
 
             """
             connection = Connection('amqp://guest:guest@172.16.82.1:5672//pypox')
