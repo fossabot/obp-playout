@@ -42,6 +42,7 @@ class PypoFile(Thread):
         self.media_queue = schedule_queue
         self.media = None
         self.cache_dir = os.path.join(config["cache_dir"], "scheduler")
+        self.storage_dir = config["storage_dir"]
 
     def copy_file(self, media_item):
         
@@ -64,6 +65,7 @@ class PypoFile(Thread):
         Copy media_item from local library directory to local cache directory.
         """
         src = media_item['uri']
+        src = os.path.join(self.storage_dir, media_item['uri'])
         dst = media_item['dst']
 
         try:
@@ -87,8 +89,6 @@ class PypoFile(Thread):
                         "%s, skipping copying...", src, dst)
         else:
             do_copy = True
-
-            9
 
         media_item['file_ready'] = not do_copy
 
