@@ -86,7 +86,7 @@ if __name__ == '__main__':
 
     # loading config file
     try:
-        config = ConfigObj('pypo.cfg')
+        config = ConfigObj('/etc/playout/pypo.cfg')
         print config
     except Exception, e:
         print '******************************************'

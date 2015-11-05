@@ -88,6 +88,8 @@ class PypoFile(Thread):
         else:
             do_copy = True
 
+            9
+
         media_item['file_ready'] = not do_copy
 
         if do_copy:
