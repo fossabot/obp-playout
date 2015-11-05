@@ -66,6 +66,7 @@ class PypoFile(Thread):
         """
         src = media_item['uri']
         src = os.path.join(self.storage_dir, media_item['uri'])
+
         dst = media_item['dst']
 
         try:
