@@ -61,7 +61,7 @@ def version_compare(version1, version2):
         return [int(x) for x in re.sub(r'(\.0+)*$','', v).split(".")]
     return cmp(normalize(version1), normalize(version2))
 
-PATH_INI_FILE = '/etc/airtime/pypo.cfg'
+PATH_INI_FILE = '/etc/playout/pypo.cfg'
 
 try:
     # Absolute path this script is in

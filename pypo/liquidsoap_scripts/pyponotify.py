@@ -62,7 +62,7 @@ logger = logging.getLogger('notify')
 
 # loading config file
 try:
-    config = ConfigObj('/etc/airtime/pypo.cfg')
+    config = ConfigObj('/etc/playout/pypo.cfg')
 
     print config
 

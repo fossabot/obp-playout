@@ -3,7 +3,7 @@ import telnetlib
 import sys
 
 try:
-    config = ConfigObj('/etc/airtime/pypo.cfg')
+    config = ConfigObj('/etc/playout/pypo.cfg')
     LS_HOST = config['ls_host']
     LS_PORT = config['ls_port']
 

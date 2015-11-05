@@ -32,7 +32,7 @@ def api_client(logger):
 
 # loading config file
 try:
-    config = ConfigObj('/etc/airtime/pypo.cfg')
+    config = ConfigObj('/etc/playout/pypo.cfg')
 except Exception, e:
     print ('Error loading config file: %s', e)
     sys.exit()

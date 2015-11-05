@@ -38,7 +38,7 @@ def get_os_codename():
 
     return ("unknown", "unknown")
 
-PATH_INI_FILE = '/etc/airtime/pypo.cfg'
+PATH_INI_FILE = '/etc/playout/pypo.cfg'
 PATH_LIQUIDSOAP_BIN = '/usr/lib/airtime/pypo/bin/liquidsoap_bin'
 
 #any debian/ubuntu codename in this et will automatically use the natty liquidsoap binary

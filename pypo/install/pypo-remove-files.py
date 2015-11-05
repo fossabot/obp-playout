@@ -7,7 +7,7 @@ if os.geteuid() != 0:
     print "Please run this as root."
     sys.exit(1)
 
-PATH_INI_FILE = '/etc/airtime/pypo.cfg'
+PATH_INI_FILE = '/etc/playout/pypo.cfg'
 
 def remove_file(path):
     try:
