@@ -27,7 +27,7 @@ from media.update.silananalyzer import SilanAnalyzer
 from api_clients import api_client
 from std_err_override import LogWriter
 
-
+CONFIG_PATH = '/etc/playout/pypo.cfg'
 
 def configure_locale():
     """
@@ -85,8 +85,12 @@ if __name__ == '__main__':
     configure_locale()
 
     # loading config file
+
+    if not os.path.isfile(CONFIG_PATH):
+        raise IOError('unable to read config file at %s' % CONFIG_PATH)
+
     try:
-        config = ConfigObj('/etc/playout/pypo.cfg')
+        config = ConfigObj(CONFIG_PATH)
         print config
     except Exception, e:
         print '******************************************'
