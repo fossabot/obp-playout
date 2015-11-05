@@ -6,7 +6,7 @@ from .. api_client import RequestProvider
 
 class TestRequestProvider(unittest.TestCase):
     def setUp(self):
-        self.cfg = ConfigObj('api_client.cfg')
+        self.cfg = ConfigObj('/etc/playout/pypo_api_client.cfg')
     def test_test(self):
         self.assertTrue('api_key' in self.cfg)
     def test_init(self):

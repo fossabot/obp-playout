@@ -78,7 +78,7 @@ if __name__ == '__main__':
 
     # loading config file
     if not os.path.isfile(os.path.join(CONFIG_PATH, 'pypo_logging.cfg')):
-        raise IOError('unable to read config file at %s' % os.path.join(CONFIG_PATH, 'pypo_logging.cfg'))
+        raise IOError('unable to read logging config file at %s' % os.path.join(CONFIG_PATH, 'pypo_logging.cfg'))
 
     try:
         logging.config.fileConfig(os.path.join(CONFIG_PATH, 'pypo_logging.cfg'))

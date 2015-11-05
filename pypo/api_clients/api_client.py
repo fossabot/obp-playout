@@ -223,7 +223,7 @@ class RequestProvider(object):
 
 
 class AirtimeApiClient(object):
-    def __init__(self, logger=None,config_path='api_clients/api_client.cfg'):
+    def __init__(self, logger=None,config_path='/etc/playout/pypo_api_client.cfg'):
         if logger is None: self.logger = logging
         else: self.logger = logger
 
