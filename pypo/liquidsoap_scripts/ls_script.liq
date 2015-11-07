@@ -1,4 +1,4 @@
-%include "/home/playout/conf/liquidsoap.cfg"
+%include "/etc/playout/liquidsoap.cfg"
 
 set("log.file.path", log_file)
 set("server.telnet", true)

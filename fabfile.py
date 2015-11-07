@@ -68,12 +68,7 @@ def deploy():
         sudo('git remote add -t %s -f origin %s' % (env.git_branch, env.git_url), user=env.sudo_user)
         sudo('git fetch', user=env.sudo_user)
         sudo('git checkout %s' % (env.git_branch), user=env.sudo_user)
-
-
-
         sudo('ls -hal', user=env.sudo_user)
-
-
 
 
     with cd(env.path):
@@ -88,10 +83,6 @@ def deploy():
 
         print green('installing requirements')
         sudo('%s/bin/pip install --upgrade -r %s' % (env.virtualenv_path, 'src_new/pypo/requirements.txt'))
-
-
-
-
 
 
     with cd(env.path):
@@ -123,6 +114,17 @@ def deploy():
             run('rm -R src_old')
         except Exception, e:
             print red('unable to remove directory: %s' % e)
+
+
+
+    try:
+        print green('restarting playout')
+
+        run('supervisorctl restart playout:pypo')
+
+    except Exception, e:
+        print e
+        pass
 
 
 
