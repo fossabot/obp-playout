@@ -67,8 +67,8 @@ def rewrite_metadata(l,~insert_missing=true,
     end
     list.map(apply,l)
   end
-  map_metadata(map,insert_missing=insert_missing,
-               update=update,strip=strip,s)
+#  map_metadata(map,insert_missing=insert_missing,
+#               update=update,strip=strip,s)
 end
 
 # Add a skip function to a source
