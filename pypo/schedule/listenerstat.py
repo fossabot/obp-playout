@@ -135,7 +135,7 @@ class ListenerStat(Thread):
     def update_listener_stat_error(self, stream_id, error):
         keyname = '%s_listener_stat_error' % stream_id
         data = {keyname: error}
-        self.api_client.update_stream_setting_table(data)
+        #self.api_client.update_stream_setting_table(data)
 
     def run(self):
         #Wake up every 120 seconds and gather icecast statistics. Note that we
