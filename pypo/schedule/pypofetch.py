@@ -453,15 +453,14 @@ class PypoFetch(Thread):
                 #check if this file is opened (sometimes Liquidsoap is still
                 #playing the file due to our knowledge of the track length
                 #being incorrect!)
-                if not self.is_file_opened(path):
+                if os.path.exists(path) and not self.is_file_opened(path):
                     os.remove(path)
                     self.logger.info("File '%s' removed" % path)
                 else:
-                    self.logger.info("File '%s' not removed. Still busy!", 
-                            path)
+                    self.logger.info("File '%s' not removed. Still busy!", path)
             except Exception, e:
-                self.logger.error("Problem removing file '%s'" % f)
-                self.logger.error(traceback.format_exc())
+                self.logger.error("Problem removing file '%s'" % path)
+                #self.logger.error(traceback.format_exc())
 
     def manual_schedule_fetch(self):
         success, self.schedule_data = self.api_client.get_schedule()
