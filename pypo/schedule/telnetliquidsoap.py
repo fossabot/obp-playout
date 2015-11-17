@@ -88,14 +88,6 @@ class TelnetLiquidsoap:
             msg = '%s.push %s\n' % (queue_id, annotation.encode('utf-8'))
             self.logger.debug(msg)
 
-            print
-            print
-            print 'SENDING MESSAGE'
-            print msg
-            print
-            print
-
-
             tn.write(msg)
 
             show_name = media_item['show_name']
