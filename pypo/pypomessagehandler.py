@@ -15,8 +15,8 @@ import json
 from std_err_override import LogWriter
 
 # configure logging
-logging.config.fileConfig("configs/logging.cfg")
-logger = logging.getLogger('message_h')
+logging.config.fileConfig('/etc/playout/pypo_logging.cfg')
+logger = logging.getLogger()
 LogWriter.override_std_err(logger)
 
 #need to wait for Python 2.7 for this..
@@ -26,7 +26,7 @@ LogWriter.override_std_err(logger)
 class PypoMessageHandler(Thread):
     def __init__(self, pq, rq, config):
         Thread.__init__(self)
-        self.logger = logging.getLogger('message_h')
+        self.logger = logging.getLogger()
         self.pypo_queue = pq
         self.recorder_queue = rq
         self.config = config

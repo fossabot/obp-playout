@@ -52,8 +52,8 @@ parser.add_option("-n", "--liquidsoap-started", help="notify liquidsoap started"
 (options, args) = parser.parse_args()
 
 # configure logging
-logging.config.fileConfig("configs/notify_logging.cfg")
-logger = logging.getLogger('notify')
+logging.config.fileConfig('/etc/playout/pypo_logging.cfg')
+logger = logging.getLogger()
 #LogWriter.override_std_err(logger)
 
 

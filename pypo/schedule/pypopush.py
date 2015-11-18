@@ -29,8 +29,7 @@ from api_clients import api_client
 from std_err_override import LogWriter
 
 # configure logging
-logging_cfg = os.path.join(os.path.dirname(__file__), "../configs/logging.cfg")
-logging.config.fileConfig(logging_cfg)
+logging.config.fileConfig('/etc/playout/pypo_logging.cfg')
 logger = logging.getLogger()
 LogWriter.override_std_err(logger)
 
@@ -43,7 +42,7 @@ class PypoPush(Thread):
         self.api_client = api_client.AirtimeApiClient()
         self.queue = q
 
-        self.logger = logging.getLogger('push')
+        self.logger = logger
 
         self.future_scheduled_queue = Queue()
         self.pypo_liquidsoap = pypo_liquidsoap

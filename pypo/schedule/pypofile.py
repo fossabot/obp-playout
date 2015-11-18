@@ -25,8 +25,7 @@ import urllib2
 from std_err_override import LogWriter
 
 # configure logging
-logging_cfg = os.path.join(os.path.dirname(__file__), "../configs/logging.cfg")
-logging.config.fileConfig(logging_cfg)
+logging.config.fileConfig('/etc/playout/pypo_logging.cfg')
 logger = logging.getLogger()
 LogWriter.override_std_err(logger)
 

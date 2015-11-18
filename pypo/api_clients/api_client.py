@@ -168,7 +168,7 @@ class ApiRequest(object):
             response = f.read()
         except Exception, e:
             self.logger.error('Exception: %s', e)
-            self.logger.error("traceback: %s", traceback.format_exc())
+            #self.logger.error("traceback: %s", traceback.format_exc())
             raise
 
         try:
@@ -180,7 +180,7 @@ class ApiRequest(object):
                 raise InvalidContentType()
         except Exception:
             self.logger.error(response)
-            self.logger.error("traceback: %s", traceback.format_exc())
+            #self.logger.error("traceback: %s", traceback.format_exc())
             raise
 
     def req(self, *args, **kwargs):
@@ -234,7 +234,7 @@ class AirtimeApiClient(object):
             self.services = RequestProvider(self.config)
         except Exception, e:
             self.logger.error('Error loading config file: %s', config_path)
-            self.logger.error("traceback: %s", traceback.format_exc())
+            #self.logger.error("traceback: %s", traceback.format_exc())
             sys.exit(1)
 
     def __get_airtime_version(self):
