@@ -91,11 +91,11 @@ if __name__ == '__main__':
     configure_locale()
 
     # loading config file
-    if not os.path.isfile(os.path.join(CONFIG_PATH, 'pypo.cfg')):
-        raise IOError('unable to read config file at %s' % '/etc/playout/pypo_logging.cfg')
+    if not os.path.isfile('/etc/playout/pypo.cfg'):
+        raise IOError('unable to read config file at %s' % '/etc/playout/pypo.cfg')
 
     try:
-        config = ConfigObj('/etc/playout/pypo_logging.cfg')
+        config = ConfigObj('/etc/playout/pypo.cfg')
         print config
     except Exception, e:
         print '******************************************'
