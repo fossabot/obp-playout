@@ -115,6 +115,7 @@ def output_to(output_type, type, bitrate, host, port, pass, mount_point, url, de
                     password = pass,
                     mount = mount_point,
                     fallible = true,
+                    icy_metadata = false,
                     url = url,
                     description = description,
                     name = name,
@@ -127,6 +128,10 @@ def output_to(output_type, type, bitrate, host, port, pass, mount_point, url, de
         end
         if type == "ogg" then
             %include "ogg.liq"
+        end
+
+        if type == "flac" then
+            %include "flac.liq"
         end
 
         %ifencoder %opus
@@ -169,7 +174,6 @@ def output_to(output_type, type, bitrate, host, port, pass, mount_point, url, de
                     port = port,
                     password = pass,
                     fallible = true,
-                    icy_metadata = false,
                     url = url,
                     genre = genre,
                     name = description,
@@ -179,10 +183,6 @@ def output_to(output_type, type, bitrate, host, port, pass, mount_point, url, de
 
         if type == "mp3" then
             %include "mp3.liq"
-        end
-
-        if type == "flac" then
-            %include "flac.liq"
         end
 
         %ifencoder %aac
