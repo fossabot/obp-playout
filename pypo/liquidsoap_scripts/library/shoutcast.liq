@@ -34,7 +34,7 @@ def output.shoutcast(
   output.icecast(
     e, format=format,
     id=id, headers=headers,
-    start=start,icy_metadata=false,
+    start=start,icy_metadata="false",
     on_connect=on_connect, on_disconnect=on_disconnect,
     host=host, port=port, user=user, password=password,
     genre=genre, url=url, description="UNUSED",
