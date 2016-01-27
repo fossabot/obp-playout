@@ -169,6 +169,7 @@ def output_to(output_type, type, bitrate, host, port, pass, mount_point, url, de
                     port = port,
                     password = pass,
                     fallible = true,
+                    icy_metadata = false,
                     url = url,
                     genre = genre,
                     name = description,
@@ -178,6 +179,10 @@ def output_to(output_type, type, bitrate, host, port, pass, mount_point, url, de
 
         if type == "mp3" then
             %include "mp3.liq"
+        end
+
+        if type == "flac" then
+            %include "flac.liq"
         end
 
         %ifencoder %aac

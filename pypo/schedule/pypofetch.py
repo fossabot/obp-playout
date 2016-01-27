@@ -410,8 +410,8 @@ class PypoFetch(Thread):
 
         print
         print '### sanity check #########################'
-        print media_item
-        print '------------------------------------------'
+        #print media_item
+        #print '------------------------------------------'
         print 'length1 (end - start)       : %s' % length1
         print 'length2 (coue_out - cue_in) : %s' % length2
 
