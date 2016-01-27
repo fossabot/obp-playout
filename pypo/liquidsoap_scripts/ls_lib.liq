@@ -115,14 +115,14 @@ def output_to(output_type, type, bitrate, host, port, pass, mount_point, url, de
                     password = pass,
                     mount = mount_point,
                     fallible = true,
-                    icy_metadata = false,
                     url = url,
                     description = description,
                     name = name,
                     genre = genre,
                     user = !user_ref,
                     on_error = on_error,
-                    on_connect = on_connect)
+                    on_connect = on_connect,
+                    icy_metadata = false)
         if type == "mp3" then
             %include "mp3.liq"
         end
