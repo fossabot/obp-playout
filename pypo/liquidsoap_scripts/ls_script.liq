@@ -44,9 +44,9 @@ def create_source()
     sources := list.append([l], !sources)
     server.register(namespace="queues",
                 "s#{!source_id}_skip",
-                fun (s) -> begin log("queues.s#{!source_id}_skip") 
-                    clear_queue(l) 
-                    "Done" 
+                fun (s) -> begin log("queues.s#{!source_id}_skip")
+                    clear_queue(l)
+                    "Done"
                 end)
     source_id := !source_id + 1
 end
@@ -213,7 +213,8 @@ def check_master_dj_client(user,password) =
     ret = list.hd(ret)
 
     #return true to let the client transmit data, or false to tell harbor to decline
-    ret == "True"
+    # ret == "True"
+    ret
 end
 
 def check_dj_client(user,password) =
@@ -223,7 +224,8 @@ def check_dj_client(user,password) =
     #ret has now the value of the live client (dj1,dj2, or djx), or "ERROR"/"unknown" ...
     hd = list.hd(ret)
     log("Live DJ authenticated: #{hd}")
-    hd == "True"
+    #hd == "True"
+    hd
 end
 
 s = switch(id="schedule_noise_switch",
@@ -232,49 +234,49 @@ s = switch(id="schedule_noise_switch",
             [({!scheduled_play_enabled}, stream_queue), ({true}, default)]
     )
 
-s = if dj_live_stream_port != 0 and dj_live_stream_mp != "" then
-    dj_live = mksafe(
-        audio_to_stereo(
-            input.harbor(id="live_dj_harbor",
-                dj_live_stream_mp,
-                port=dj_live_stream_port,
-                auth=check_dj_client,
-                max=40.,
-                on_connect=live_dj_connect,
-                on_disconnect=live_dj_disconnect)))
+#s = if dj_live_stream_port != 0 and dj_live_stream_mp != "" then
+#    dj_live = mksafe(
+#        audio_to_stereo(
+#            input.harbor(id="live_dj_harbor",
+#                dj_live_stream_mp,
+#                port=dj_live_stream_port,
+#                auth=check_dj_client,
+#                max=40.,
+#                on_connect=live_dj_connect,
+#                on_disconnect=live_dj_disconnect)))
+#
+#    ignore(output.dummy(dj_live, fallible=true))
+#
+#    switch(id="show_schedule_noise_switch",
+#            track_sensitive=false,
+#            transitions=[transition, transition],
+#            [({!live_dj_enabled}, dj_live), ({true}, s)]
+#        )
+#else
+#    s
+#end
 
-    ignore(output.dummy(dj_live, fallible=true))
-
-    switch(id="show_schedule_noise_switch",
-            track_sensitive=false,
-            transitions=[transition, transition],
-            [({!live_dj_enabled}, dj_live), ({true}, s)]
-        )
-else
-    s
-end
-
-s = if master_live_stream_port != 0 and master_live_stream_mp != "" then
-    master_dj = mksafe(
-        audio_to_stereo(
-            input.harbor(id="master_harbor",
-                master_live_stream_mp,
-                port=master_live_stream_port,
-                auth=check_master_dj_client,
-                max=40.,
-                on_connect=master_dj_connect,
-                on_disconnect=master_dj_disconnect)))
-
-    ignore(output.dummy(master_dj, fallible=true))
-
-    switch(id="master_show_schedule_noise_switch",
-            track_sensitive=false,
-            transitions=[transition, transition],
-            [({!master_dj_enabled}, master_dj), ({true}, s)]
-        )
-else
-    s
-end
+#s = if master_live_stream_port != 0 and master_live_stream_mp != "" then
+#    master_dj = mksafe(
+#        audio_to_stereo(
+#            input.harbor(id="master_harbor",
+#                master_live_stream_mp,
+#                port=master_live_stream_port,
+#                auth=check_master_dj_client,
+#                max=40.,
+#                on_connect=master_dj_connect,
+#                on_disconnect=master_dj_disconnect)))
+#
+#    ignore(output.dummy(master_dj, fallible=true))
+#
+#    switch(id="master_show_schedule_noise_switch",
+#            track_sensitive=false,
+#            transitions=[transition, transition],
+#            [({!master_dj_enabled}, master_dj), ({true}, s)]
+#        )
+#else
+#    s
+#end
 
 
 # Attach a skip command to the source s:

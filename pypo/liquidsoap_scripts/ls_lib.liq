@@ -16,7 +16,7 @@ def notify_stream(m)
 end
 
 # A function applied to each metadata chunk
-def append_title(m) =  
+def append_title(m) =
   log("Using stream_format #{!stream_metadata_type}")
   if !stream_metadata_type == 1 then
     [("title", "#{!show_name} - #{m['artist']} - #{m['title']}")]
@@ -63,9 +63,9 @@ end
 
 
 # Define a transition that fades out the
-# old source, adds a single, and then 
+# old source, adds a single, and then
 # plays the new source
-def to_live(old,new) = 
+def to_live(old,new) =
   # Fade out old source
   old = fade.final(old)
   # Compose this in sequence with
@@ -133,23 +133,23 @@ def output_to(output_type, type, bitrate, host, port, pass, mount_point, url, de
             %include "flac.liq"
         end
 
-        %ifencoder %opus
-        if type == "opus" then
-            %include "opus.liq"
-        end
-        %endif
+#        %ifencoder %opus
+#        if type == "opus" then
+#            %include "opus.liq"
+#        end
+#        %endif
 
-        %ifencoder %aac
-        if type == "aac" then
-            %include "aac.liq"
-        end
-        %endif
+#        %ifencoder %aac
+#        if type == "aac" then
+#            %include "aac.liq"
+#        end
+#        %endif
 
-        %ifencoder %aacplus
-        if type == "aacplus" then
-            %include "aacplus.liq"
-        end
-        %endif
+#        %ifencoder %aacplus
+#        if type == "aacplus" then
+#            %include "aacplus.liq"
+#        end
+#        %endif
     else
         user_ref = ref user
         if user == "" then
@@ -184,17 +184,17 @@ def output_to(output_type, type, bitrate, host, port, pass, mount_point, url, de
             %include "mp3.liq"
         end
 
-        %ifencoder %aac
-        if type == "aac" then
-            %include "aac.liq"
-        end
-        %endif
-        
-        %ifencoder %aacplus
-        if type == "aacplus" then
-            %include "aacplus.liq"
-        end
-        %endif
+#        %ifencoder %aac
+#        if type == "aac" then
+#            %include "aac.liq"
+#        end
+#        %endif
+
+#        %ifencoder %aacplus
+#        if type == "aacplus" then
+#            %include "aacplus.liq"
+#        end
+#        %endif
     end
 end
 
@@ -230,7 +230,7 @@ def clear_queue(s)
 end
 
 def set_dynamic_source_id(id) =
-    current_dyn_id := id 
+    current_dyn_id := id
     string_of(!current_dyn_id)
 end
 
@@ -263,7 +263,7 @@ def input.http_restart(~id,~initial_url="http://dummy/url")
   source = audio_to_stereo(input.http(buffer=5.,max=15.,id=id,autostart=false,initial_url))
 
   def stopped()
-    "stopped" == list.hd(server.execute("#{id}.status"))
+    "stopped" == list.hd(default="",server.execute("#{id}.status"))
   end
 
   server.register(namespace=id,
@@ -320,7 +320,7 @@ def cross_http(~debug=true,~http_input_id,source)
   def crosser(a,b)
     url = list.hd(server.execute('#{id}.url'))
     status = list.hd(server.execute('#{id}.status'))
-    on_m([("source_url",url)])
+#    on_m([("source_url",url)])
     if debug then
       log("New track inside HTTP stream")
       log("  status: #{status}")
@@ -371,7 +371,7 @@ def http_fallback(~http_input_id,~http,~default)
   end
 
   def connected()
-    status = list.hd(server.execute("#{id}.status"))
+    status = list.hd(default="",server.execute("#{id}.status"))
     not(list.mem(status,["polling","stopped"]))
   end
   connected = gracetime(connected)

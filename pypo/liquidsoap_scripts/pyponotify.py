@@ -112,9 +112,9 @@ class Notify:
 
     def run_with_options(self, options):
 
-        print "* run_with_options pre options"
-        print options
-        print "* post options"
+        # print "* run_with_options pre options"
+        # print options
+        # print "* post options"
 
         if options.error and options.stream_id:
             self.notify_liquidsoap_status(options.error, options.stream_id, options.time)

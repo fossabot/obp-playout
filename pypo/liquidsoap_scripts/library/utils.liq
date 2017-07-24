@@ -1,18 +1,9 @@
-
-# Turn a source into an infaillible source.
-# by adding blank when the source is not available.
+# Turn a source into an infaillible source by adding blank when the source is
+# not available.
 # @param s the source to turn infaillible
 # @category Source / Track Processing
-def mksafe(s)
-  fallback(id="mksafe",track_sensitive=false,[s,blank(id="safe_blank")])
-end
-
-# Alias for the <code>l[k]</code> notation.
-# @category List
-# @param a Key to look for
-# @param l List of pairs (key,value)
-def list.assoc(a,l)
-  l[a]
+def mksafe(~id="mksafe",s)
+  fallback(id=id,track_sensitive=false,[s,blank(id="safe_blank")])
 end
 
 # list.mem_assoc(key,l) returns true if l contains a pair
@@ -31,12 +22,13 @@ def list.mem_assoc(a,l)
   list.fold(f, false, l)
 end
 
-# Remove a pair from an associative list
+# list.filter_assoc(key,l) returns all the elements of the form
+# (key, value) from l.
 # @category List
-# @param a Key of pair to be removed
+# @param k Key to look for
 # @param l List of pairs (key,value)
-def list.remove_assoc(a,l)
-  list.remove((a,list.assoc(a,l)),l)
+def list.filter_assoc(k,l)
+  list.filter(fun (el) -> fst(el) == k, l)
 end
 
 # Rewrite metadata on the fly using a list of (target,rules).
@@ -71,46 +63,37 @@ def rewrite_metadata(l,~insert_missing=true,
                update=update,strip=strip,s)
 end
 
-# Add a skip function to a source
-# when it does not have one
-# by default
+# Add a skip function to a source when it does not have one by default.
 # @category Interaction
 # @param s The source to attach the command to.
 def add_skip_command(s) =
- # A command to skip
- def skip(_) =
-   source.skip(s)
-   "Done!"
- end
- # Register the command:
- server.register(namespace="#{source.id(s)}",
-                 usage="skip",
-                 description="Skip the current song.",
-                 "skip",skip)
+  # A command to skip
+  def skip(_) =
+    source.skip(s)
+    "Done!"
+  end
+  # Register the command:
+  server.register(namespace="#{source.id(s)}",
+                  usage="skip",
+                  description="Skip the current song.",
+                  "skip",skip)
 end
 
-# Removes all metadata coming from a source
+# Removes all metadata coming from a source.
 # @category Source / Track Processing
 def drop_metadata(s)
   map_metadata(fun(_)->[],update=false,strip=true,insert_missing=false,s)
 end
 
-# Merge all tracks from a source, provided that it does not fail
-# @category Source / Track Processing
-def merge_tracks(s)
-  sequence(merge=true,[s])
-end
-
-# Default inputs and outpus
+# Default inputs and outpus.
 #
-# They are called "prefered" but it's not a user preference,
-# just a view of what's generally preferable among the available
-# modules.
-# It is important that input and output preferences are in the
-# same order: the chosen I/O should work in the same clock, we don't
-# want an ALSA input and OSS output. The only exception is AO:
-# it is the default output after dummy, so the input will be a dummy
-# when AO is used for output.
+# They are called "prefered" but it's not a user preference, just a view of
+# what's generally preferable among the available modules.
+#
+# It is important that input and output preferences are in the same order: the
+# chosen I/O should work in the same clock, we don't want an ALSA input and OSS
+# output. The only exception is AO: it is the default output after dummy, so the
+# input will be a dummy when AO is used for output.
 
 output.prefered=output.dummy
 %ifdef output.ao
@@ -128,8 +111,8 @@ output.prefered=output.dummy
 %ifdef output.pulseaudio
   output.prefered=output.pulseaudio
 %endif
-# Output to local audio card using the first available driver in
-# pulseaudio, portaudio, oss, alsa, ao, dummy.
+# Output to local audio card using the first available driver in pulseaudio,
+# portaudio, oss, alsa, ao, dummy.
 # @category Source / Output
 def output.prefered(~id="",~fallible=false,
                     ~on_start={()},~on_stop={()},~start=true,s)
@@ -153,8 +136,8 @@ end
 %ifdef input.pulseaudio
   in = input.pulseaudio
 %endif
-# Create a source from the first available input driver in
-# pulseaudio, portaudio, oss, alsa, blank.
+# Create a source from the first available input driver in pulseaudio,
+# portaudio, oss, alsa, blank.
 # @category Source / Input
 def in(~id="",~start=true,~on_start={()},~on_stop={()},~fallible=false)
   in(id=id,start=start,on_start=on_start,on_stop=on_stop,fallible=fallible)
@@ -168,7 +151,8 @@ def out(s)
   output.prefered(mksafe(s))
 end
 
-# Special track insensitive fallback that always skips current song before switching.
+# Special track insensitive fallback that always skips current song before
+# switching.
 # @category Source / Track Processing
 # @param ~input The input source
 # @param f The fallback source
@@ -248,52 +232,85 @@ def helium(s)
 end
 %endif
 
-# Return true if process exited with 0 code. Command should return quickly.
+# Get the value associated to a variable in the process environment. Return ""
+# if variable is not set.
 # @category System
-# @param command    Command to test
-def test_process(command)
-  lines =
-    get_process_lines("(" ^ command ^ " >/dev/null 2>&1 && echo 0) || echo 1")
-  if list.length(lines) == 0 then
-    false
-  else
-    "0" == list.hd(lines)
-  end
+def getenv(s) =
+  list.assoc(default="",s,environment())
 end
 
-# Split an url of the form foo?arg=bar&arg2=bar2
-# into ("foo",[("arg","bar"),("arg2","bar2")]).
+# Perform a shell call and return its output.
+# @category System
+# @param ~timeout Cancel process after @timeout@ has elapsed. Ignored if negative.
+# @param ~env Process environment
+# @param ~inherit_env Inherit calling process's environment when @env@ parameter is empty.
+# @param command Command to run
+def get_process_output(~timeout=(-1.),~env=[],~inherit_env=true,command) =
+  fst(fst(run_process(timeout=timeout,env=env,inherit_env=inherit_env,command)))
+end
+
+# Perform a shell call and return the list of its output lines.
+# @category System
+# @param ~timeout Cancel process after @timeout@ has elapsed. Ignored if negative.
+# @param ~env Process environment
+# @param ~inherit_env Inherit calling process's environment when @env@ parameter is empty.
+# @param command Command to run
+def get_process_lines(~timeout=(-1.),~env=[],~inherit_env=true,command) =
+  string.split(separator="\\n",get_process_output(timeout=timeout,env=env,inherit_env=inherit_env,command))
+end
+
+# Return true if process exited with 0 code.
+# @category System
+# @param ~timeout Cancel process after @timeout@ has elapsed. Ignored if negative.
+# @param ~env Process environment
+# @param ~inherit_env Inherit calling process's environment when @env@ parameter is empty.
+# @param command Command to test
+def test_process(~timeout=(-1.),~env=[],~inherit_env=true,command) =
+  res = run_process(timeout=timeout,env=env,command)
+  snd(res) == ("exit","0")
+end
+
+# Split the arguments of an url of the form arg=bar&arg2=bar2 into
+# [("arg","bar"),("arg2","bar2")].
+# @category String
+# @param args Agument string to split
+def url.split_args(args) =
+  def f(x) =
+    ret = string.split(separator="=",x)
+    arg = url.decode(list.nth(default="",ret,0))
+    val = if list.length(ret) == 1 then "" else url.decode(list.nth(default="",ret,1)) end
+    (arg,val)
+  end
+  l = string.split(separator="&",args)
+  list.map(f,l)
+end
+
+# Split an url of the form foo?arg=bar&arg2=bar2 into
+# ("foo",[("arg","bar"),("arg2","bar2")]).
 # @category String
 # @param uri Url to split
-def url.split(uri) = 
+def url.split(uri) =
   ret = string.extract(pattern="([^\?]*)\?(.*)",uri)
   args = ret["2"]
   if args != "" then
-    l = string.split(separator="&",args)
-    def f(x) =
-      ret = string.split(separator="=",x)
-      (url.decode(list.nth(ret,0)),
-       url.decode(list.nth(ret,1)))
-    end
-    l = list.map(f,l)
-    (ret["1"],l)
+    (ret["1"],url.split_args(ret["2"]))
   else
     (uri,[])
   end
 end
 
-# Register a server/telnet command to update a source's metadata. Returns
-# a new source, which will receive the updated metadata. The command has
-# the following format: insert key1="val1",key2="val2",...
+# Register a server/telnet command to update a source's metadata. Returns a new
+# source, which will receive the updated metadata. The command has the following
+# format: insert key1="val1",key2="val2",...
 # @category Source / Track Processing
 # @param ~id Force the value of the source ID.
-def server.insert_metadata(~id="",s) = 
+def server.insert_metadata(~id="",s) =
   x = insert_metadata(id=id,s)
   insert = fst(x)
   s = snd(x)
-  def insert(s) = 
+  def insert(s) =
     l = string.split(separator='([^=]+\s*=\s*"(\\"|[^"])*")\s*,\s*',s)
-    def f(l,x) = 
+    def f(l,x) =
       sub = fun (s) -> string.replace(pattern='\\"',fun (_) -> '"',s)
       if x != "" then
         ret = string.extract(pattern='([^=]+)\s*=\s*"((?:\\"|[^"])*)"',x)
@@ -350,7 +367,7 @@ def read(~hide=false)
   if hide then
     system("stty -echo")
   end
-  s = list.hd(get_process_lines("read BLA && echo $BLA"))
+  s = list.hd(default="",get_process_lines("read BLA && echo $BLA"))
   if hide then
     system("stty echo")
   end
@@ -367,19 +384,19 @@ end
 # Alias of file.mime (because it is available)
 # @category System
 def file.mime_default(file)
- file.mime(file)
+  file.mime(file)
 end
 %endif
 
-# Generic mime test. First try to use file.mime if it exist.
-# Otherwise try to get the value using the file binary.
-# Returns "" (empty string) if no value can be find.
+# Generic mime test. First try to use file.mime if it exist.  Otherwise try to
+# get the value using the file binary. Returns "" (empty string) if no value
+# can be found.
 # @category System
 # @param file The file to test
 def get_mime(file) =
   def file_method(file) =
     if test_process("which file") then
-      list.hd(get_process_lines("file -b --mime-type \
+      list.hd(default="",get_process_lines("file -b --mime-type \
                                   #{quote(file)}"))
     else
       ""
@@ -388,7 +405,7 @@ def get_mime(file) =
   # First try mime method
   ret = file.mime_default(file)
   if ret != "" then
-    ret 
+    ret
   else
     # Now try file method
     file_method(file)
@@ -487,9 +504,9 @@ def smart_crossfade (~start_next=5.,~fade_in=3.,~fade_out=3.,
     # but that's another story.
 
     else
-      # Otherwise, A and B are just too loud to overlap nicely,
-      # or the difference between them is too large and overlapping would
-      # completely mask one of them.
+      # Otherwise, A and B are just too loud to overlap nicely, or the
+      # difference between them is too large and overlapping would completely
+      # mask one of them.
       log("No transition: using default.")
       default(sa, sb)
     end
@@ -499,50 +516,54 @@ def smart_crossfade (~start_next=5.,~fade_in=3.,~fade_out=3.,
               transition,s)
 end
 
-# Custom playlist source written using the script language.
-# Will read directory or playlist, play all files and stop.
-# Returns a pair @(reload,source)@ where @reload@ is a function
-# of type @(?uri:string)->unit@ used to reload the source and @source@
-# is the actual source. The reload function can optionally be called
-# with a new playlist URI. Otherwise, it reloads the previous URI.
+# Custom playlist source written using the script language.  Will read directory
+# or playlist, play all files and stop.  Returns a pair @(reload,source)@ where
+# @reload@ is a function of type @(?uri:string)->unit@ used to reload the source
+# and @source@ is the actual source. The reload function can optionally be
+# called with a new playlist URI. Otherwise, it reloads the previous URI.
 # @category Source / Input
 # @param ~id Force the value of the source ID.
 # @param ~random Randomize playlist content
 # @param ~on_done Function to execute when the playlist is finished
+# @param ~filter Filter out some files depending on metadata
 # @param uri Playlist URI
-def playlist.reloadable(~id="",~random=false,~on_done={()},uri)
+def playlist.reloadable(~id="",~random=false,~on_done={()},~filter=fun(_)->true,uri)
   # A reference to the playlist
   playlist = ref []
   # A reference to the uri
   playlist_uri = ref uri
-  # A reference to know if the source
-  # has been stopped
+  # A reference to know if the source has been stopped
   has_stopped = ref false
   # The next function
-  def next () =
+  def rec next () =
     file =
       if list.length(!playlist) > 0 then
-        ret = list.hd(!playlist)
+        ret = list.hd(default="",!playlist)
         playlist := list.tl(!playlist)
         ret
       else
         # Playlist finished
         if not !has_stopped then
+          has_stopped := true
           on_done ()
         end
-        has_stopped := true
         ""
       end
-    request.create(file)
+    r = request.create(file)
+    if filter(request.metadata(r)) then
+      r
+    else
+      next ()
+    end
   end
   # Instanciate the source
   source = request.dynamic(id=id,next)
   # Get its id.
   id = source.id(source)
   # The load function
-  def load_playlist () = 
-    files = 
-      if test_process("test -d #{quote(!playlist_uri)}") then
+  def load_playlist () =
+    files =
+      if file.is_directory(!playlist_uri) then
         log(label=id,"playlist is a directory.")
         get_process_lines("find #{quote(!playlist_uri)} -type f | sort")
       else
@@ -591,15 +612,36 @@ def playlist.reloadable(~id="",~random=false,~on_done={()},uri)
   (reload,source)
 end
 
-# Custom playlist source written using the script language.
-# Will read directory or playlist, play all files and stop
+# Custom playlist source written using the script language. It will read directory
+# or playlist, play all files and stop.
 # @category Source / Input
-# @param ~id Force the value of the source ID. 
+# @param ~id Force the value of the source ID.
 # @param ~random Randomize playlist content
 # @param ~on_done Function to execute when the playlist is finished
+# @param ~reload_mode If set to "watch", will be reloaded when the playlist is changed
 # @param uri Playlist URI
-def playlist.once(~id="",~random=false,~on_done={()},uri)
-  snd(playlist.reloadable(id=id,random=random,on_done=on_done,uri))
+def playlist.once(~id="",~random=false,~on_done={()},~reload_mode="",uri)
+  rs = playlist.reloadable(id=id,random=random,on_done=on_done,uri)
+  reload = fst(rs)
+  s = snd(rs)
+  if reload_mode == "watch" then
+    unwatch = file.watch(uri,fun () -> reload())
+    source.on_shutdown(s,unwatch)
+  end
+  s
+end
+
+# Play the whole playlist as one track.
+# @category Source / Track Processing
+# @param ~id Force the value of the source ID.
+# @param ~random Randomize playlist content
+# @param uri Playlist URI.
+def playlist.merge(~id="",~random=false,uri) =
+  pl = playlist.reloadable(id=id,random=random,uri)
+  reload = fst(pl)
+  s = snd(pl)
+  s = merge_tracks(s)
+  on_end(delay=0.,fun(_,_)->reload(),s)
 end
 
 # Mixes two streams, with faded transitions between the state when only the
@@ -639,8 +681,8 @@ def at(pred,s)
   switch([(pred,s)])
 end
 
-# Execute a given action when a predicate is true.
-# This will be run in background.
+# Execute a given action when a predicate is true. This will be run in
+# background.
 # @category System
 # @param ~freq Frequency for checking the predicate, in seconds.
 # @param ~pred Predicate indicating when to execute the function, \
@@ -656,24 +698,10 @@ def exec_at(~freq=1.,~pred,f)
   add_timeout(freq,check)
 end
 
-# Register the replaygain protocol.
-# @category Liquidsoap
-def replaygain_protocol(arg,delay)
- # The extraction program
- extract_replaygain = "#{configure.libdir}/extract-replaygain"
- x = get_process_lines("#{extract_replaygain} #{quote(arg)}")
- if list.hd(x) != "" then
-  ["annotate:replay_gain=\"#{list.hd(x)}\":#{arg}"]
- else
-  [arg]
- end
-end
-add_protocol("replay_gain", replaygain_protocol)
-
-# Enable replay gain metadata resolver. This resolver will
-# process any file decoded by liquidsoap and add a replay_gain
-# metadata when this value could be computed. For a finer-grained
-# replay gain processing, use the replay_gain protocol.
+# Enable replay gain metadata resolver. This resolver will process any file
+# decoded by liquidsoap and add a replay_gain metadata when this value could be
+# computed. For a finer-grained replay gain processing, use the replay_gain
+# protocol.
 # @category Liquidsoap
 # @param ~extract_replaygain The extraction program
 def enable_replaygain_metadata(
@@ -681,8 +709,8 @@ def enable_replaygain_metadata(
   def replaygain_metadata(file)
     x = get_process_lines("#{extract_replaygain} \
                               #{quote(file)}")
-    if list.hd(x) != "" then
-      [("replay_gain",list.hd(x))]
+    if list.hd(default="",x) != "" then
+      [("replay_gain",list.hd(default="",x))]
     else
       []
     end
@@ -690,9 +718,9 @@ def enable_replaygain_metadata(
   add_metadata_resolver("replay_gain", replaygain_metadata)
 end
 
-# Assign a new clock to the given source (and to other time-dependent
-# sources) and return the source. It is a conveniency wrapper around
-# clock.assign_new(), allowing more concise scripts in some cases.
+# Assign a new clock to the given source (and to other time-dependent sources)
+# and return the source. It is a conveniency wrapper around clock.assign_new(),
+# allowing more concise scripts in some cases.
 # @category Liquidsoap
 # @param ~sync Do not synchronize the clock on regular wallclock time, \
 #              but try to run as fast as possible (CPU burning mode).
@@ -701,8 +729,8 @@ def clock(~sync=true,~id="",s)
   s
 end
 
-# Create a log of clock times for all the clocks initially present.
-# The log is in a simple format which you can directly use with gnuplot.
+# Create a log of clock times for all the clocks initially present. The log is
+# in a simple format which you can directly use with gnuplot.
 # @category Liquidsoap
 # @param ~interval Polling interval.
 # @param ~delay    Delay before setting up the clock logger. This should \
@@ -726,4 +754,138 @@ def log_clocks(~delay=0.,~interval=1.,logfile)
   else
     add_timeout(delay,{add_timeout(interval,report) (-1.)})
   end
+end
+
+# Skip track when detecting a blank.
+# @category Source / Track Processing
+# @param ~id Force the value of the source ID.
+# @param ~threshold Power in decibels under which the stream is considered silent.
+# @param ~max_blank Maximum silence length allowed, in seconds.
+# @param ~min_noise Minimum duration of noise required to end silence, in seconds.
+# @param ~track_sensitive Reset blank counter at each track.
+def skip_blank(~id="",~threshold=-40.,~max_blank=20.,~min_noise=0.,~track_sensitive=true,s)
+  on_blank({source.skip(s)},threshold=threshold,max_blank=max_blank,min_noise=min_noise,track_sensitive=track_sensitive,s)
+end
+
+# Same operator as rotate but merges tracks from each sources.
+# For instance, <code>rotate.merge([intro,main,outro])</code> creates a source
+# that plays a sequence <code>[intro,main,outro]</code> as single track and loops back.
+# @category Source / Track Processing
+# @param ~id Force the value of the source ID.
+# @param ~track_sensitive Re-select only on end of tracks.
+# @param ~transitions Transition functions, padded with <code>fun (x,y) -> y</code> functions.
+# @param ~weights Weights of the children (padded with 1), defining for each child how many tracks are played from it per round, if that many are actually available.
+# @param sources Sequence of sources to be merged
+def rotate.merge(~id="",~track_sensitive=true,~transitions=[],~weights=[],sources)
+  ready = ref true
+  duration = get(default=0.04,"frame.duration")
+
+  def to_first(old,new) =
+    ready := (not !ready)
+    sequence(merge=true,[blank(duration=duration),new])
+  end
+
+  transitions = if list.length(transitions) == 0 then
+    [to_first]
+  else
+    list.mapi((fun (i,t) ->
+      if i == 0 then
+        (fun (old,new) ->
+          to_first(old,t(old,new)))
+      else t end), transitions)
+  end
+
+  source = rotate(track_sensitive=track_sensitive,transitions=transitions,weights=weights,sources)
+  source = merge_tracks(source)
+
+  switch(id=id,replay_metadata=false,track_sensitive=false,[({!ready}, source), ({(not !ready)}, source)])
+end
+
+# Extract the left channel of a stereo source
+# @category Source / Conversions
+# @param s Source to extract from
+def stereo.left(s)
+  mean(stereo.pan(pan=-1., s))
+end
+
+# Extract the right channel of a stereo source
+# @category Source / Conversions
+# @param s Source to extract from
+def stereo.right(s)
+  mean(stereo.pan(pan=1., s))
+end
+
+# Rotate between overlapping sources. Next track starts according
+# to 'liq_start_next' offset metadata.
+# @category Source / Track Processing
+# @param ~id Force the value of the source ID.
+# @param ~start_next Metadata field indicating when the next track should start, relative to current track's time.
+# @param ~weights Relative weight of the sources in the sum. The empty list stands for the homogeneous distribution.
+# @param sources Sources to toggle from
+def overlap_sources(~id="",~normalize=false,
+                    ~start_next="liq_start_next",
+                    ~weights=[],sources) =
+  position = ref 0
+  length   = list.length(sources)
+
+  def current_position() =
+    pos = !position
+    position := (pos + 1) mod length
+    pos
+  end
+
+  ready_list = list.map(fun (_) -> ref false,sources)
+  grab_ready = list.nth(default=ref false,ready_list)
+
+  def set_ready(pos,b) =
+    is_ready = grab_ready(pos)
+    is_ready := b
+  end
+
+  # Start next track on_offset
+  def on_start_next(_,_) =
+    set_ready(current_position(),true)
+  end
+  on_offset = on_offset(force=true,override=start_next,on_start_next)
+  sources = list.map(on_offset,sources)
+
+  # Disable after each track
+  def disable(pos,source) =
+    def disable(_) =
+      set_ready(pos,false)
+    end
+    on_track(disable,source)
+  end
+
+  sources = list.mapi(disable,sources)
+
+  # Relay metadata from all sources
+  send_to_main_source = ref fun (_) -> ()
+
+  def relay_metadata(m) =
+    fn = !send_to_main_source
+    fn(m)
+  end
+  sources = list.map(on_metadata(relay_metadata),sources)
+
+  # Now drop all metadata
+  sources = list.map(drop_metadata,sources)
+
+  # Wrap sources into switches.
+  def make_switch(pos,source) =
+    is_ready = grab_ready(pos)
+    switch(track_sensitive=true,[({!is_ready},source)])
+  end
+  sources = list.mapi(make_switch,sources)
+
+  # Initiate the whole thing.
+  set_ready(current_position(),true)
+
+  # Create main source
+  source = add(id=id,normalize=normalize,weights=weights,sources)
+
+  # Set send_to_main_source
+  x = insert_metadata(source)
+  send_to_main_source := fst(x)
+  snd(x)
 end
