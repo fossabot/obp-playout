@@ -5,6 +5,7 @@
 .project
 .idea*
 .idea
+remote/
 
 env
 docs/
