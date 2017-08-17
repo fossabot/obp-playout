@@ -51,7 +51,7 @@ signal.signal(signal.SIGINT, keyboardInterruptHandler)
 POLL_INTERVAL = 60 * 60
 
 class PypoFetch(Thread):
-    def __init__(self, pypoFetch_q, pypoPush_q, media_q, pypo_liquidsoap, 
+    def __init__(self, pypoFetch_q, pypoPush_q, media_q, pypo_liquidsoap,
             config):
         Thread.__init__(self)
 
@@ -138,8 +138,8 @@ class PypoFetch(Thread):
                 self.listener_timeout = POLL_INTERVAL
             else:
                 self.listener_timeout = \
-                        (self.last_update_schedule_timestamp - 
-                                time.time() + 
+                        (self.last_update_schedule_timestamp -
+                                time.time() +
                                 POLL_INTERVAL)
                 if self.listener_timeout < 0:
                     self.listener_timeout = 0
@@ -151,7 +151,7 @@ class PypoFetch(Thread):
 
 
     def switch_source_temp(self, sourcename, status):
-        self.logger.debug('Setting source %s to "%s" status', sourcename, 
+        self.logger.debug('Setting source %s to "%s" status', sourcename,
                 status)
 
         command = "streams."
@@ -299,7 +299,7 @@ class PypoFetch(Thread):
                         change[stream] = True
 
         # set flag change for sound_device alway True
-        self.logger.info("Change:%s, State_Change:%s...", change, 
+        self.logger.info("Change:%s, State_Change:%s...", change,
                 state_change_restart)
 
         for k, v in state_change_restart.items():
@@ -339,7 +339,7 @@ class PypoFetch(Thread):
             stream_id = info[0]
             status = info[1]
             if(status == "true"):
-                self.api_client.notify_liquidsoap_status("OK", stream_id, 
+                self.api_client.notify_liquidsoap_status("OK", stream_id,
                         str(fake_time))
 
     """
@@ -373,7 +373,7 @@ class PypoFetch(Thread):
                 if (media_item['type'] == 'file'):
                     self.sanity_check_media_item(media_item)
                     fileExt = os.path.splitext(media_item['uri'])[1]
-                    dst = os.path.join(download_dir, 
+                    dst = os.path.join(download_dir,
                             unicode(media_item['id']) + fileExt)
                     media_item['dst'] = dst
                     media_item['file_ready'] = False
@@ -381,12 +381,13 @@ class PypoFetch(Thread):
 
                 media_item['start'] = datetime.strptime(media_item['start'],
                         "%Y-%m-%d-%H-%M-%S")
-                media_item['end'] = datetime.strptime(media_item['end'], 
+                media_item['end'] = datetime.strptime(media_item['end'],
                         "%Y-%m-%d-%H-%M-%S")
                 media_copy[media_item['start']] = media_item
 
             self.media_prepare_queue.put(copy.copy(media_filtered))
-        except Exception, e: self.logger.error("%s", e)
+        except Exception as e:
+            self.logger.error("%s", e)
 
         # Send the data to pypo-push
         self.logger.debug("Pushing to pypo-push")
@@ -394,8 +395,10 @@ class PypoFetch(Thread):
 
 
         # cleanup
-        try: self.cache_cleanup(media)
-        except Exception, e: self.logger.error("%s", e)
+        try:
+            self.cache_cleanup(media)
+        except Exception as e:
+            self.logger.error("%s", e)
 
     #do basic validation of file parameters. Useful for debugging
     #purposes
@@ -408,12 +411,10 @@ class PypoFetch(Thread):
         length1 = pure.date_interval_to_seconds(end - start)
         length2 = media_item['cue_out'] - media_item['cue_in']
 
-        print
-        print '### sanity check #########################'
-        #print media_item
-        #print '------------------------------------------'
-        print 'length1 (end - start)       : %s' % length1
-        print 'length2 (coue_out - cue_in) : %s' % length2
+        # print
+        # print '### sanity check #########################'
+        # print 'length1 (end - start)       : %s' % length1
+        # print 'length2 (coue_out - cue_in) : %s' % length2
 
         if abs(length2 - length1) > 1:
             self.logger.error("Two lengths are not equal!!!")
@@ -457,7 +458,7 @@ class PypoFetch(Thread):
                     self.logger.info("File '%s' removed" % path)
                 else:
                     self.logger.info("File '%s' not removed. Still busy!", path)
-            except Exception, e:
+            except Exception as e:
                 self.logger.error("Problem removing file '%s'" % path)
                 #self.logger.error(traceback.format_exc())
 
@@ -514,7 +515,7 @@ class PypoFetch(Thread):
                 Currently we are checking every POLL_INTERVAL seconds.
                 """
 
-                message = self.fetch_queue.get(block=True, 
+                message = self.fetch_queue.get(block=True,
                         timeout=self.listener_timeout)
                 self.handle_message(message)
             except Empty, e:

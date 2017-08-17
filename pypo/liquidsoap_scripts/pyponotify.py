@@ -64,9 +64,8 @@ logger = logging.getLogger()
 try:
     config = ConfigObj('/etc/playout/pypo.cfg')
 
-    print config
 
-except Exception, e:
+except Exception as e:
     logger.error('Error loading config file: %s', e)
     sys.exit()
 
@@ -134,10 +133,7 @@ class Notify:
 
 
 if __name__ == '__main__':
-    print
-    print '#########################################'
-    print '#     pypo notification gateway         #'
-    print '#########################################'
+
 
     # initialize
     try:
