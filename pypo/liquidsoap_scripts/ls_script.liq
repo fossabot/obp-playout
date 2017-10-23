@@ -319,55 +319,69 @@ server.register(namespace="streams",
 #%include "process.liq"
 
 
-if output_sound_device then
-    success = ref false
-
-    log(output_sound_device_type)
-
-    %ifdef output.alsa
-	if output_sound_device_type == "ALSA" then
-		ignore(output.alsa(s))
-        success := true
-	end
-	%endif
-
-	%ifdef output.ao
-	if output_sound_device_type == "AO" then
-		ignore(output.ao(s))
-        success := true
-	end
-	%endif
-
-	%ifdef output.oss
-	if output_sound_device_type == "OSS" then
-        ignore(output.oss(s))
-        success := true
-	end
-	%endif
-
-	%ifdef output.portaudio
-	if output_sound_device_type == "Portaudio" then
-        ignore(output.portaudio(s))
-        success := true
-	end
-	%endif
-
-	%ifdef output.pulseaudio
-	if output_sound_device_type == "Pulseaudio" then
-        ignore(output.pulseaudio(s))
-        success := true
-	end
-	%endif
-
-    if (!success == false) then
-        ignore(output.prefered(s))
-	end
-
-end
 
 
 #######################################################################
-# we don't want outputs configured in global config but rather include a more flexible & explicit output script
+# playout output configuration
+#######################################################################
+%include "/etc/playout/liquidsoap_output.cfg"
+
+
+
+#######################################################################
+# we don't need soundcard output from pypo
+#######################################################################
+
+#if output_sound_device then
+#    success = ref false
+#
+#    log(output_sound_device_type)
+#
+#    %ifdef output.alsa
+#	if output_sound_device_type == "ALSA" then
+#		ignore(output.alsa(s))
+#        success := true
+#	end
+#	%endif
+#
+#	%ifdef output.ao
+#	if output_sound_device_type == "AO" then
+#		ignore(output.ao(s))
+#        success := true
+#	end
+#	%endif
+#
+#	%ifdef output.oss
+#	if output_sound_device_type == "OSS" then
+#        ignore(output.oss(s))
+#        success := true
+#	end
+#	%endif
+#
+#	%ifdef output.portaudio
+#	if output_sound_device_type == "Portaudio" then
+#        ignore(output.portaudio(s))
+#        success := true
+#	end
+#	%endif
+#
+#	%ifdef output.pulseaudio
+#	if output_sound_device_type == "Pulseaudio" then
+#        ignore(output.pulseaudio(s))
+#        success := true
+#	end
+#	%endif
+#
+#    if (!success == false) then
+#        ignore(output.prefered(s))
+#	end
+#
+#end
+
+
+#######################################################################
+# we don't want outputs configured in global config but rather include
+# a more flexible & explicit output script
 #######################################################################
 
 #if s1_enable == true then
