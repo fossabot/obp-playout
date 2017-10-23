@@ -74,129 +74,129 @@ def to_live(old,new) =
 end
 
 
-def output_to(output_type, type, bitrate, host, port, pass, mount_point, url, description, genre, user, s, stream, connected, name, channels) =
-    source = ref s
-    def on_error(msg)
-        connected := "false"
-        command = "./notify.sh --error='#{msg}' --stream-id=#{stream} --time=#{!time} &"
-        system(command)
-        log(command)
-        5.
-    end
-    def on_connect()
-        connected := "true"
-        command = "./notify.sh --connect --stream-id=#{stream} --time=#{!time} &"
-        system(command)
-        log(command)
-    end
-
-    stereo = (channels == "stereo")
-
-    if output_type == "icecast" then
-        user_ref = ref user
-        if user == "" then
-            user_ref := "source"
-        end
-        output_mono = output.icecast(host = host,
-                    port = port,
-                    password = pass,
-                    mount = mount_point,
-                    fallible = true,
-                    url = url,
-                    description = description,
-                    name = name,
-                    genre = genre,
-                    user = !user_ref,
-                    on_error = on_error,
-                    on_connect = on_connect)
-
-        output_stereo = output.icecast(host = host,
-                    port = port,
-                    password = pass,
-                    mount = mount_point,
-                    fallible = true,
-                    url = url,
-                    description = description,
-                    name = name,
-                    genre = genre,
-                    user = !user_ref,
-                    on_error = on_error,
-                    on_connect = on_connect)
-        if type == "mp3" then
-            %include "mp3.liq"
-        end
-        if type == "ogg" then
-            %include "ogg.liq"
-        end
-
-        if type == "flac" then
-            %include "flac.liq"
-        end
-
+#def output_to(output_type, type, bitrate, host, port, pass, mount_point, url, description, genre, user, s, stream, connected, name, channels) =
+#    source = ref s
+#    def on_error(msg)
+#        connected := "false"
+#        command = "./notify.sh --error='#{msg}' --stream-id=#{stream} --time=#{!time} &"
+#        system(command)
+#        log(command)
+#        5.
+#    end
+#    def on_connect()
+#        connected := "true"
+#        command = "./notify.sh --connect --stream-id=#{stream} --time=#{!time} &"
+#        system(command)
+#        log(command)
+#    end
+#
+#    stereo = (channels == "stereo")
+#
+#    if output_type == "icecast" then
+#        user_ref = ref user
+#        if user == "" then
+#            user_ref := "source"
+#        end
+#        output_mono = output.icecast(host = host,
+#                    port = port,
+#                    password = pass,
+#                    mount = mount_point,
+#                    fallible = true,
+#                    url = url,
+#                    description = description,
+#                    name = name,
+#                    genre = genre,
+#                    user = !user_ref,
+#                    on_error = on_error,
+#                    on_connect = on_connect)
+#
+#        output_stereo = output.icecast(host = host,
+#                    port = port,
+#                    password = pass,
+#                    mount = mount_point,
+#                    fallible = true,
+#                    url = url,
+#                    description = description,
+#                    name = name,
+#                    genre = genre,
+#                    user = !user_ref,
+#                    on_error = on_error,
+#                    on_connect = on_connect)
+#        if type == "mp3" then
+#            %include "mp3.liq"
+#        end
+#        if type == "ogg" then
+#            %include "ogg.liq"
+#        end
+#
+#        if type == "flac" then
+#            %include "flac.liq"
+#        end
+#
 #        %ifencoder %opus
 #        if type == "opus" then
 #            %include "opus.liq"
 #        end
 #        %endif
-
+#
 #        %ifencoder %aac
 #        if type == "aac" then
 #            %include "aac.liq"
 #        end
 #        %endif
-
+#
 #        %ifencoder %aacplus
 #        if type == "aacplus" then
 #            %include "aacplus.liq"
 #        end
 #        %endif
-    else
-        user_ref = ref user
-        if user == "" then
-            user_ref := "source"
-        end
-
-        output_mono = output.shoutcast(id = "shoutcast_stream_#{stream}",
-                    host = host,
-                    port = port,
-                    password = pass,
-                    fallible = true,
-                    url = url,
-                    genre = genre,
-                    name = description,
-                    user = !user_ref,
-                    on_error = on_error,
-                    on_connect = on_connect)
-
-        output_stereo = output.shoutcast(id = "shoutcast_stream_#{stream}",
-                    host = host,
-                    port = port,
-                    password = pass,
-                    fallible = true,
-                    url = url,
-                    genre = genre,
-                    name = description,
-                    user = !user_ref,
-                    on_error = on_error,
-                    on_connect = on_connect)
-
-        if type == "mp3" then
-            %include "mp3.liq"
-        end
-
+#    else
+#        user_ref = ref user
+#        if user == "" then
+#            user_ref := "source"
+#        end
+#
+#        output_mono = output.shoutcast(id = "shoutcast_stream_#{stream}",
+#                    host = host,
+#                    port = port,
+#                    password = pass,
+#                    fallible = true,
+#                    url = url,
+#                    genre = genre,
+#                    name = description,
+#                    user = !user_ref,
+#                    on_error = on_error,
+#                    on_connect = on_connect)
+#
+#        output_stereo = output.shoutcast(id = "shoutcast_stream_#{stream}",
+#                    host = host,
+#                    port = port,
+#                    password = pass,
+#                    fallible = true,
+#                    url = url,
+#                    genre = genre,
+#                    name = description,
+#                    user = !user_ref,
+#                    on_error = on_error,
+#                    on_connect = on_connect)
+#
+#        if type == "mp3" then
+#            %include "mp3.liq"
+#        end
+#
 #        %ifencoder %aac
 #        if type == "aac" then
 #            %include "aac.liq"
 #        end
 #        %endif
-
+#
 #        %ifencoder %aacplus
 #        if type == "aacplus" then
 #            %include "aacplus.liq"
 #        end
 #        %endif
-    end
-end
+#    end
+#end
 
 # Add a skip function to a source
 # when it does not have one
