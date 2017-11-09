@@ -11,19 +11,19 @@ import telnetlib
 from threading import Lock
 
 def create_liquidsoap_annotation(media):
-    # We need liq_start_next value in the annotate. That is the value that 
+    # We need liq_start_next value in the annotate. That is the value that
     # controls overlap duration of crossfade.
     return ('annotate:media_id="%s",liq_start_next="%s",liq_fade_in="%s",' +
             'liq_fade_out="%s",liq_cue_in="%s",liq_cue_out="%s",' +
             'schedule_table_id="%s",replay_gain="%s dB":%s') % \
-            (media['id'], 
+            (media['id'],
                     float(media['fade_cross']),
-                    float(media['fade_in']) / 1000, 
-                    float(media['fade_out']) / 1000, 
-                    float(media['cue_in']), 
-                    float(media['cue_out']), 
-                    media['row_id'], 
-                    media['replay_gain'], 
+                    float(media['fade_in']) / 1000,
+                    float(media['fade_out']) / 1000,
+                    float(media['cue_in']),
+                    float(media['cue_out']),
+                    media['row_id'],
+                    media['replay_gain'],
                     media['dst'])
 
 class TelnetLiquidsoap:
@@ -59,7 +59,7 @@ class TelnetLiquidsoap:
                 msg = 'queues.%s_skip\n' % i
                 self.logger.debug(msg)
                 tn.write(msg)
-            
+
             tn.write("exit\n")
             self.logger.debug(tn.read_all())
 
@@ -70,7 +70,7 @@ class TelnetLiquidsoap:
             msg = 'queues.%s_skip\n' % queue_id
             self.logger.debug(msg)
             tn.write(msg)
-            
+
             tn.write("exit\n")
             self.logger.debug(tn.read_all())
 
@@ -140,7 +140,7 @@ class TelnetLiquidsoap:
             self.logger.debug(tn.read_all())
 
             self.current_prebuffering_stream_id = None
-        
+
     def start_web_stream_buffer(self, media_item):
         with self.telnet_lock:
             tn = self.__connect()
@@ -198,7 +198,7 @@ class TelnetLiquidsoap:
             tn.read_all()
 
     def switch_source(self, sourcename, status):
-        self.logger.debug('Switching source: %s to "%s" status', sourcename, 
+        self.logger.debug('Switching source: %s to "%s" status', sourcename,
                 status)
         command = "streams."
         if sourcename == "master_dj":
@@ -232,7 +232,7 @@ class TelnetLiquidsoap:
     def update_liquidsoap_station_name(self, station_name):
         with self.telnet_lock:
             tn = self.__connect()
-            command = ('vars.station_name %s\n' % 
+            command = ('vars.station_name %s\n' %
                     station_name).encode('utf-8')
             self.logger.info(command)
             tn.write(command)
@@ -243,8 +243,8 @@ class TelnetLiquidsoap:
         output = None
         with self.telnet_lock:
             tn = self.__connect()
-            # update the boot up time of Liquidsoap. Since Liquidsoap is not 
-            # restarting, we are manually adjusting the bootup time variable 
+            # update the boot up time of Liquidsoap. Since Liquidsoap is not
+            # restarting, we are manually adjusting the bootup time variable
             # so the status msg will get updated.
             boot_up_time_command = "vars.bootup_time %s\n" % str(current_time)
             self.logger.info(boot_up_time_command)
@@ -262,7 +262,7 @@ class TelnetLiquidsoap:
     def update_liquidsoap_stream_format(self, stream_format):
         with self.telnet_lock:
             tn = self.__connect()
-            command = ('vars.stream_metadata_type %s\n' % 
+            command = ('vars.stream_metadata_type %s\n' %
                     stream_format).encode('utf-8')
             self.logger.info(command)
             tn.write(command)
@@ -291,11 +291,7 @@ class DummyTelnetLiquidsoap:
     def queue_push(self, queue_id, media_item):
         try:
             self.telnet_lock.acquire()
-
             self.logger.info("Pushing %s to queue %s" % (media_item, queue_id))
-            from datetime import datetime
-            print "Time now: %s" % datetime.now()
-
             annotation = create_liquidsoap_annotation(media_item)
             self.liquidsoap_mock_queues[queue_id].append(annotation)
         except Exception:
@@ -306,10 +302,7 @@ class DummyTelnetLiquidsoap:
     def queue_remove(self, queue_id):
         try:
             self.telnet_lock.acquire()
-
             self.logger.info("Purging queue %s" % queue_id)
-            from datetime import datetime
-            print "Time now: %s" % datetime.now()
 
         except Exception:
             raise

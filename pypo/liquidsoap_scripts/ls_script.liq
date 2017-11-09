@@ -1,10 +1,12 @@
+print('x')
+
 %include "/etc/playout/liquidsoap.cfg"
 
 set("log.file.path", log_file)
 set("server.telnet", true)
 set("server.telnet.port", 1234)
 set("server.telnet.bind_addr","0.0.0.0")
-set("init.daemon.pidfile.path", "/var/run/airtime-liquidsoap.pid")
+set("init.daemon.pidfile.path", "/var/run/playout-liquidsoap.pid")
 
 %include "library/pervasives.liq"
 

@@ -43,25 +43,26 @@ class PypoLiqQueue(Thread):
 
         while True:
             try:
-                print 'time_until_next_play: %s' % time_until_next_play
+                print('time_until_next_play: %s' % time_until_next_play)
                 if time_until_next_play is None:
                     self.logger.info("waiting indefinitely for schedule")
                     media_schedule = self.queue.get(block=True)
                 else:
-                    self.logger.info("waiting %ss until next scheduled item" %
-                            time_until_next_play)
-                    media_schedule = self.queue.get(block=True, \
-                            timeout=time_until_next_play)
-            except Empty, e:
-                print 'queue empty: %s' % e
+                    self.logger.info("waiting %ss until next scheduled item" % time_until_next_play)
+                    media_schedule = self.queue.get(block=True, timeout=time_until_next_play)
+
+            except Empty as e:
+                print('queue empty: %s' % e)
+
                 #Time to push a scheduled item.
                 media_item = schedule_deque.popleft()
                 self.pypo_liquidsoap.play(media_item)
                 if len(schedule_deque):
-                    time_until_next_play = \
-                            pure.date_interval_to_seconds(
-                                schedule_deque[0]['start'] - datetime.now())
-                                #schedule_deque[0]['start'] - timedelta(milliseconds=int(schedule_deque[0]['fade_cross'] * 1000)) - datetime.now())
+                    time_until_next_play = pure.date_interval_to_seconds(
+                        schedule_deque[0]['start'] - datetime.now()
+                        # schedule_deque[0]['start'] - timedelta(milliseconds=int(schedule_deque[0]['fade_cross'] * 1000)) - datetime.now()
+                    )
+
                     if time_until_next_play < 0:
                         time_until_next_play = 0
                 else:
@@ -74,23 +75,18 @@ class PypoLiqQueue(Thread):
                 schedule_deque.clear()
 
                 keys = sorted(media_schedule.keys())
-                print 'KEYS:'
-                print keys
                 for i in keys:
-                    print 'keys loop - i: %s' % i
                     schedule_deque.append(media_schedule[i])
 
                 if len(keys):
-                    time_until_next_play = pure.date_interval_to_seconds(\
-                            keys[0] - datetime.now())
+                    time_until_next_play = pure.date_interval_to_seconds(keys[0] - datetime.now())
                 else:
                     time_until_next_play = None
 
     def run(self):
         try: self.main()
-        except Exception, e:
-            self.logger.error('PypoLiqQueue Exception: %s', 
-                    traceback.format_exc())
+        except Exception as e:
+            self.logger.error('PypoLiqQueue Exception: %s', traceback.format_exc())
 
 
 

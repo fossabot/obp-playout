@@ -35,9 +35,9 @@ LogWriter.override_std_err(logger)
 
 class PypoPush(Thread):
     def __init__(self, q, pypo_liquidsoap):
-        
-        print 'init PypoPush'
-        
+
+        print('init PypoPush')
+
         Thread.__init__(self)
         self.api_client = api_client.AirtimeApiClient()
         self.queue = q
@@ -47,9 +47,7 @@ class PypoPush(Thread):
         self.future_scheduled_queue = Queue()
         self.pypo_liquidsoap = pypo_liquidsoap
 
-        self.plq = PypoLiqQueue(self.future_scheduled_queue, \
-                self.pypo_liquidsoap, \
-                self.logger)
+        self.plq = PypoLiqQueue(self.future_scheduled_queue, self.pypo_liquidsoap, self.logger)
         self.plq.daemon = True
         self.plq.start()
 
@@ -59,9 +57,9 @@ class PypoPush(Thread):
 
         while True:
             try:
-                print 'try to get media_schedule'
+                print('try to get media_schedule')
                 media_schedule = self.queue.get(block=True)
-            except Exception, e:
+            except Exception as e:
                 self.logger.error(str(e))
                 raise
             else:
@@ -107,7 +105,7 @@ class PypoPush(Thread):
 
     def run(self):
         try: self.main()
-        except Exception, e:
+        except Exception as e:
             top = traceback.format_exc()
             self.logger.error('Pypo Push Exception: %s', top)
 
