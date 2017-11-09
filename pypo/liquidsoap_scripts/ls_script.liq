@@ -41,7 +41,7 @@ sources = ref []
 source_id = ref 0
 
 def create_source()
-    l = request.equeue(id="s#{!source_id}", length=0.5)
+    l = audio_to_stereo(request.equeue(id="s#{!source_id}", length=0.5))
     l = cue_cut(l)
     sources := list.append([l], !sources)
     server.register(namespace="queues",
