@@ -1,6 +1,6 @@
 # PyPo - Python based playout
  
-PyPo acts as a gateway betwen web API/RabbitMQ and Liquidsoap.
+PyPo acts as a gateway between web API/RabbitMQ and Liquidsoap.
 
 
 ## Installation
